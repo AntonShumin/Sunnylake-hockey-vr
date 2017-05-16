@@ -10,6 +10,21 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
     private script_manager_ui_world m_ui_world;
     private script_cannon m_cannon_easy;
 
+    //puck management
+    public GameObject m_puck_prefab;
+    private Rigidbody[] m_pucks = new Rigidbody[5];
+    private int m_current_puck = 0;
+    private Transform m_puck_spowner;
+    private Vector3 m_puck_spowner_position;
+    private IEnumerator shoot_coroutine;
+    public float m_shoot_frequency = 2f;
+    public float m_shoot_strength = 100f;
+    public float m_height;
+    public float m_width;
+
+    //goal
+    private Collider m_goal_collider_exit;
+
     //Scores
     private int m_score_positive;
     private int m_score_negative;
@@ -27,12 +42,16 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
 
     //cached
     private string[] score_array = new string[9];
+    private Vector3 m_vector_shoot = new Vector3(0, 0, 1f);
+
 
 
     void Awake()
     {
         m_ui_world = GameObject.Find("World Canvas").GetComponent<script_manager_ui_world>();
         m_cannon_easy = GameObject.Find("Cannon C").GetComponent<script_cannon>();
+        m_puck_spowner = transform.FindChild("spowner");
+        m_puck_spowner_position = m_puck_spowner.position;
         Setup_Summary_Vars();
     }
 
@@ -58,6 +77,13 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
     void Start()
     {
         Game_Event("setup summary");
+        for (int i = 0; i < 5; i++)
+        {
+            m_pucks[i] = GameObject.Instantiate(m_puck_prefab, m_puck_spowner_position, Quaternion.identity).GetComponent<Rigidbody>();
+            //m_pucks[i].gameObject.SetActive(false);
+        }
+        shoot_coroutine = Shoot_Puck();
+        m_goal_collider_exit = GameObject.Find("Collider Exit").GetComponent<Collider>();
     }
 
     void Update()
@@ -79,6 +105,8 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
                 break;
             case ("cannon fire"):
                 m_cannon_easy.Game_Event(event_name);
+                m_game_state = GameState.Shooting;
+                StartCoroutine(shoot_coroutine);
                 break;
             case ("count shots"):
                 Count_Shots();
@@ -90,7 +118,10 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
                 Build_Summary_Scores();
                 break;
             case ("stop cannon"):
+                m_game_state = GameState.Active;
                 m_cannon_easy.Game_Event("stop");
+                StopAllCoroutines();
+                StopCoroutine(shoot_coroutine);
                 break;
             case ("end wave"):
                 StartCoroutine(Sequence_End_Round());
@@ -190,6 +221,37 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
         string seconds = Mathf.RoundToInt(sec % 60).ToString("00");
 
         return minutes + ":" + seconds;
+    }
+
+    IEnumerator Shoot_Puck()
+    {
+        while (true)
+        {
+
+
+            //fire
+            m_goal_collider_exit.enabled = false;
+            m_vector_shoot.x = Random.Range(-m_width, m_width);
+            m_vector_shoot.y = Random.Range(0.05f, m_height);
+            m_pucks[m_current_puck].transform.position = m_spowner_position;
+            m_pucks[m_current_puck].transform.rotation = m_puck_rotation;
+            m_pucks[m_current_puck].GetComponent<script_puck>().m_cannon_fired = true;
+            m_pucks[m_current_puck].velocity = m_vector_shoot * m_shoot_strength;
+            m_goal_collider_exit.enabled = true;
+            Game_Event("count shots");
+
+            //cleanup
+            m_current_puck++;
+            if (m_current_puck > m_pucks.Length - 1)
+            {
+                m_current_puck = 0;
+            }
+
+            //delay
+            yield return new WaitForSeconds(m_shoot_frequency);
+
+
+        }
     }
 
 
