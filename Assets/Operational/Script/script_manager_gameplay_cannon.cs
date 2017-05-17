@@ -11,18 +11,16 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
     private script_cannon m_cannon_easy;
 
     //puck management
+    public float m_shoot_frequency = 2f;
     public GameObject m_puck_prefab;
     private Rigidbody[] m_pucks = new Rigidbody[5];
     private int m_current_puck = 0;
-    private Transform m_puck_spowner;
-    private Vector3 m_puck_spowner_position;
+    
     private IEnumerator shoot_coroutine;
-    public float m_shoot_frequency = 2f;
-    public float m_shoot_strength = 100f;
-    public float m_height;
-    public float m_width;
 
-    //goal
+
+    //other
+    private script_cannon m_selected_cannon;
     private Collider m_goal_collider_exit;
 
     //Scores
@@ -42,7 +40,7 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
 
     //cached
     private string[] score_array = new string[9];
-    private Vector3 m_vector_shoot = new Vector3(0, 0, 1f);
+    
 
 
 
@@ -50,8 +48,7 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
     {
         m_ui_world = GameObject.Find("World Canvas").GetComponent<script_manager_ui_world>();
         m_cannon_easy = GameObject.Find("Cannon C").GetComponent<script_cannon>();
-        m_puck_spowner = transform.FindChild("spowner");
-        m_puck_spowner_position = m_puck_spowner.position;
+        
         Setup_Summary_Vars();
     }
 
@@ -227,20 +224,17 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
     {
         while (true)
         {
+            //select cannon
+            m_selected_cannon = m_cannon_easy;
 
 
-            //fire
+            //puck fire
             m_goal_collider_exit.enabled = false;
-            m_vector_shoot.x = Random.Range(-m_width, m_width);
-            m_vector_shoot.y = Random.Range(0.05f, m_height);
-            m_pucks[m_current_puck].transform.position = m_spowner_position;
-            m_pucks[m_current_puck].transform.rotation = m_puck_rotation;
-            m_pucks[m_current_puck].GetComponent<script_puck>().m_cannon_fired = true;
-            m_pucks[m_current_puck].velocity = m_vector_shoot * m_shoot_strength;
+            m_selected_cannon.Shoot(m_pucks[m_current_puck]);
             m_goal_collider_exit.enabled = true;
             Game_Event("count shots");
 
-            //cleanup
+            //handle puck array index
             m_current_puck++;
             if (m_current_puck > m_pucks.Length - 1)
             {
