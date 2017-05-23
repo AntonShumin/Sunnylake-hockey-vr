@@ -11,7 +11,7 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
     private script_cannon m_cannon_easy;
 
     //puck management
-    public float m_shoot_frequency = 2f;
+    public float m_shoot_frequency = 1.4f;
     public GameObject m_puck_prefab;
     private Rigidbody[] m_pucks = new Rigidbody[5];
     private int m_current_puck = 0;
@@ -68,7 +68,7 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
 
         //silent vars
         m_wave = 1;
-        m_wave_shots_left = 10;
+        m_wave_shots_left = 100;
     }
 
     void Start()
@@ -76,7 +76,7 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
         Game_Event("setup summary");
         for (int i = 0; i < 5; i++)
         {
-            m_pucks[i] = GameObject.Instantiate(m_puck_prefab, m_puck_spowner_position, Quaternion.identity).GetComponent<Rigidbody>();
+            m_pucks[i] = GameObject.Instantiate(m_puck_prefab, new Vector3(132,10,127), Quaternion.identity).GetComponent<Rigidbody>();
             //m_pucks[i].gameObject.SetActive(false);
         }
         shoot_coroutine = Shoot_Puck();
@@ -161,7 +161,7 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
     {
         
         //puck exits the goal area
-        if (m_game_state == GameState.Active)
+        if (m_game_state == GameState.Shooting)
         {
 
             if (type == "exit zone")
@@ -226,6 +226,8 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
         {
             //select cannon
             m_selected_cannon = m_cannon_easy;
+            m_selected_cannon.Shoot_prepare();
+            yield return new WaitForSeconds(0.6f);
 
 
             //puck fire
