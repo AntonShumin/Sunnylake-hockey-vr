@@ -227,7 +227,10 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
             //select cannon
             m_selected_cannon = m_cannon_easy;
             m_selected_cannon.Shoot_prepare();
-            yield return new WaitForSeconds(0.6f);
+            yield return new WaitForSeconds(0.4f);
+
+            m_selected_cannon.Shoot_play_sound();
+            yield return new WaitForSeconds(0.2f);
 
 
             //puck fire

@@ -13,10 +13,16 @@ public class script_cannon : MonoBehaviour {
     private Transform m_puck_spowner;
     private Vector3 m_puck_spowner_position;
 
+    //sound
+    private AudioSource m_Audio_Source;
+    public AudioClip[] m_Sounds_Shoot = new AudioClip[5];
+    public AudioClip[] m_Sounds_Other = new AudioClip[5];
+
     //other private
     private script_manager_gameplay_cannon m_manager_gameplay_cannon;
     private Animator m_Animator;
     private ParticleSystem m_particles;
+    
 
 
     //cached vars
@@ -30,6 +36,7 @@ public class script_cannon : MonoBehaviour {
         m_manager_gameplay_cannon = GameObject.Find("Manager_Gameplay").GetComponent<script_manager_gameplay_cannon>();
         m_Animator = GetComponent<Animator>();
         m_particles = transform.FindChild("FireFx").GetComponent<ParticleSystem>();
+        m_Audio_Source = GetComponent<AudioSource>();
     }
 
     void Start()
@@ -47,10 +54,21 @@ public class script_cannon : MonoBehaviour {
     {
         //play animation
         m_Animator.SetTrigger("trigger_ready");
+
+        //play sound
+        m_Audio_Source.PlayOneShot(m_Sounds_Other[0],0.05f );
+    }
+
+    public void Shoot_play_sound()
+    {
+        //play sound
+        m_Audio_Source.PlayOneShot(m_Sounds_Shoot[Random.Range(0, 4)], 0.1f);
     }
 
     public void Shoot(Rigidbody puck)
     {
+        
+
         //play animation
         m_Animator.SetTrigger("trigger_shoot");
 
