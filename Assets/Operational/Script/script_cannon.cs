@@ -56,6 +56,7 @@ public class script_cannon : MonoBehaviour {
         m_Animator.SetTrigger("trigger_ready");
 
         //play sound
+        m_Audio_Source.pitch = 0.6f + Random.Range(0, 80) / 100f;
         m_Audio_Source.PlayOneShot(m_Sounds_Other[0],0.05f );
     }
 
