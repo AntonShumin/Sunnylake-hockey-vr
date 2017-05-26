@@ -26,30 +26,36 @@
         }
 
 
-        private void OnCollisionEnter(Collision collision)
+        public void OnCollisionEnter(Collision collision)
         {
 
             //set vars
             impact_velocity = 1f / 40f * collision.relativeVelocity.magnitude;
             impact_velocity = Mathf.Min(30f,impact_velocity);
             impact_velocity = Mathf.Max(0.05f,impact_velocity);
+
+            //vibrate
             Debug.Log("haptic strength " + impact_velocity);
-
-            //haptic feedback
-            if (grabbingController != null && IsGrabbed())
-            {
-
-                Vibrate(impact_velocity, 0.1f);
-            }
+            Vibrate(impact_velocity, 0.1f);
             
         }
 
         private void Vibrate(float strength, float duration)
         {
-            VRTK_SharedMethods.TriggerHapticPulse(VRTK_DeviceFinder.GetControllerIndex(grabbingController), strength, duration, 0.01f);
+            if (grabbingController != null && IsGrabbed())
+            {
+                VRTK_SharedMethods.TriggerHapticPulse(VRTK_DeviceFinder.GetControllerIndex(grabbingController), strength, duration, 0.01f);
+            }
+            
         }
 
-        
+        public void GroundEnter()
+        {
+            Vibrate(0.1f, 0.05f);
+        }
+
+
+
 
     }
 }

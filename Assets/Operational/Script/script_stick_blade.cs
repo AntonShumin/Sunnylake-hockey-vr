@@ -76,4 +76,14 @@ public class script_stick_blade : MonoBehaviour {
             m_Rigidbody.velocity = calculatedVelocity;
         }
     }
+
+    public void OnCollisionEnter(Collision collision)
+    {
+        m_Blade_Reference.GetComponent<script_stick_helper>().OnCollisionEnter(collision);
+    }
+
+    public void GroundEnter()
+    {
+        m_Blade_Reference.GetComponent<script_stick_helper>().GroundEnter();
+    }
 }
