@@ -24,7 +24,7 @@
 
         private void DoTouchpadTouchStart(object sender, ControllerInteractionEventArgs e)
         {
-            GameObject puck = GameObject.Find("prefab_puck");
+            GameObject puck = GameObject.Find("prefab_ball");
             puck.GetComponent<Rigidbody>().velocity = Vector3.zero;
             puck.transform.position = transform.position;
 

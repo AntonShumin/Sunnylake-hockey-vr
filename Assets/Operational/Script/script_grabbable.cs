@@ -8,9 +8,16 @@
     {
 
         private GameObject grabbingController;
+        private ParticleSystem m_particles_block;
 
         //cashed 
         private float impact_velocity;
+        private Vector3 m_position_impact;
+
+        void Start()
+        {
+            m_particles_block = GameObject.Find("particles_block").GetComponent<ParticleSystem>();
+        }
 
         public override void Grabbed(GameObject grabbingObject)
         {
@@ -37,6 +44,10 @@
             //vibrate
             Debug.Log("haptic strength " + impact_velocity);
             Vibrate(impact_velocity, 0.1f);
+
+            //particles
+            m_position_impact = collision.transform.position;
+            //get collision point
             
         }
 
