@@ -20,6 +20,6 @@ public class script_stick_grounddetect : MonoBehaviour {
 
     public void OnTriggerEnter(Collider collider)
     {
-        m_parent.GroundEnter();
+        //m_parent.GroundEnter();
     }
 }
