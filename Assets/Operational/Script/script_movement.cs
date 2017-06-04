@@ -9,6 +9,11 @@ public class script_movement : MonoBehaviour {
     public Transform m_transform;
     public GameObject m_reference_center;
     public GameObject m_reference_headset;
+    public Rigidbody m_reference_cameraRig;
+
+    //cameraRig movement
+    private Vector3 m_cameraRig_position;
+    private Vector3 m_cameraRig_position_last;
 
 
     //caching
@@ -17,19 +22,36 @@ public class script_movement : MonoBehaviour {
 
     void Awake()
     {
-        m_right_controller = gameObject;
+        //right controller
+        m_right_controller = transform.parent.gameObject;
+        m_skate_position_current_raw = m_right_controller.transform.position;
+        //camera
         m_reference_headset = Camera.main.gameObject;
+        //camera Rig
+        m_reference_cameraRig = GameObject.Find("[CameraRig]").GetComponent<Rigidbody>();
+        m_cameraRig_position = m_reference_cameraRig.transform.position;
     }
 
 	// Use this for initialization
 	void Start () {
-       
+        m_reference_cameraRig.velocity = new Vector3(5, 0, 0);
     }
 	
 	// Update is called once per frame
 	void Update () {
-        if(m_right_controller) Feet_swipe_skating();
-	}
+
+        CameraRig_position_tracking();
+        Feet_swipe_skating();
+
+    }
+
+    private void CameraRig_position_tracking()
+    {
+        m_cameraRig_position_last = m_cameraRig_position;
+        m_cameraRig_position = m_reference_cameraRig.transform.position;
+
+        
+    }
 
     void FixedUpdate()
     {
@@ -89,8 +111,9 @@ public class script_movement : MonoBehaviour {
         }
     }
 
-
-    private Vector3 m_skate_position_last = Vector3.zero;
+    private Vector3 m_skate_position_last_raw;
+    private Vector3 m_skate_position_current_raw;
+    private Vector3 m_skate_position_last;
     private Vector3 m_skate_position_current;
     private Vector3 m_skate_diff;
     private float m_skate_velocity;
@@ -99,22 +122,32 @@ public class script_movement : MonoBehaviour {
 
     private void Feet_swipe_skating()
     {
-        m_skate_position_current = m_right_controller.transform.position;
+        //set basic vars
+        m_skate_position_last_raw = m_skate_position_current_raw;   
+        m_skate_position_current_raw = m_right_controller.transform.position;
+        //substract CameraRig movement
+        m_skate_position_current = m_skate_position_current_raw - m_cameraRig_position;
+        m_skate_position_last = m_skate_position_last_raw - m_cameraRig_position_last;
+        
+
+        //Debug.Log("current " + m_skate_position_current);
+        //Debug.Log("last " + m_skate_position_last);
+
+
+        //calculate
         m_skate_diff = m_skate_position_current - m_skate_position_last;
         m_skate_velocity = Vector3.Magnitude(m_skate_diff)  / Time.deltaTime;
-        if(m_skate_velocity > 0.5)
+        if(m_skate_velocity > 0.1)
         {
             m_total_distance += Vector3.Magnitude(m_skate_diff);
             Debug.Log(m_total_distance);
         } else
         {
-            Debug.Log("--------------reset");
+            //Debug.Log("--------------reset");
             m_total_distance = 0;
         }
         
 
-        //store values
-        m_skate_position_last = m_skate_position_current;
     }
 
     public void Spown_Ball()
