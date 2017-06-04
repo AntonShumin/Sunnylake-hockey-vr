@@ -35,6 +35,11 @@ public class script_stick_blade : MonoBehaviour {
         m_Ground = GameObject.Find("Ice_Plane");
     }
 
+    void Start()
+    {
+        m_Ground = GameObject.Find("ice_plane");
+    }
+
 	
 
     void FixedUpdate()

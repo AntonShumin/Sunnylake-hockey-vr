@@ -15,6 +15,11 @@ public class script_movement : MonoBehaviour {
     private Vector3 m_reference_center_position;
     private Vector3 m_controller_feet_position;
 
+    void Awake()
+    {
+        m_right_controller = gameObject;
+        m_reference_headset = Camera.main.gameObject;
+    }
 
 	// Use this for initialization
 	void Start () {
@@ -89,6 +94,7 @@ public class script_movement : MonoBehaviour {
     private Vector3 m_skate_position_current;
     private Vector3 m_skate_diff;
     private float m_skate_velocity;
+    private float m_total_distance;
 
 
     private void Feet_swipe_skating()
@@ -96,8 +102,16 @@ public class script_movement : MonoBehaviour {
         m_skate_position_current = m_right_controller.transform.position;
         m_skate_diff = m_skate_position_current - m_skate_position_last;
         m_skate_velocity = Vector3.Magnitude(m_skate_diff)  / Time.deltaTime;
-        if(m_skate_velocity > 1)
-        Debug.Log(m_skate_velocity);
+        if(m_skate_velocity > 0.5)
+        {
+            m_total_distance += Vector3.Magnitude(m_skate_diff);
+            Debug.Log(m_total_distance);
+        } else
+        {
+            Debug.Log("--------------reset");
+            m_total_distance = 0;
+        }
+        
 
         //store values
         m_skate_position_last = m_skate_position_current;
