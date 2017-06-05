@@ -34,7 +34,7 @@ public class script_movement : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        m_reference_cameraRig.velocity = new Vector3(5, 0, 0);
+        //m_reference_cameraRig.velocity = new Vector3(5, 0, 0);
     }
 	
 	// Update is called once per frame
@@ -111,6 +111,8 @@ public class script_movement : MonoBehaviour {
         }
     }
 
+
+    //skate swipe strength
     private Vector3 m_skate_position_last_raw;
     private Vector3 m_skate_position_current_raw;
     private Vector3 m_skate_position_last;
@@ -119,33 +121,52 @@ public class script_movement : MonoBehaviour {
     private float m_skate_velocity;
     private float m_total_distance;
 
+    //skate swiper vector
+    private Vector3 m_skate_headset_position;
+    private Vector3 m_skate_headset_diffVector;
+    private float m_skate_headset_dot;
+
 
     private void Feet_swipe_skating()
     {
         //set basic vars
-        m_skate_position_last_raw = m_skate_position_current_raw;   
+        m_skate_position_last_raw = m_skate_position_current_raw;
         m_skate_position_current_raw = m_right_controller.transform.position;
         //substract CameraRig movement
         m_skate_position_current = m_skate_position_current_raw - m_cameraRig_position;
         m_skate_position_last = m_skate_position_last_raw - m_cameraRig_position_last;
+
         
 
-        //Debug.Log("current " + m_skate_position_current);
-        //Debug.Log("last " + m_skate_position_last);
-
-
-        //calculate
+        //swipe vector
         m_skate_diff = m_skate_position_current - m_skate_position_last;
-        m_skate_velocity = Vector3.Magnitude(m_skate_diff)  / Time.deltaTime;
-        if(m_skate_velocity > 0.1)
+        m_skate_velocity = Vector3.Magnitude(m_skate_diff) / Time.deltaTime;
+        
+        //headset to leg vector
+        m_skate_headset_position = m_reference_headset.transform.position;
+        m_skate_headset_diffVector = m_skate_position_current_raw - m_skate_headset_position;
+        m_skate_headset_dot = Vector3.Dot(m_skate_headset_diffVector, m_skate_diff);
+        Debug.Log(m_skate_headset_dot);
+
+        //action
+        if (m_skate_velocity > 0.3 && m_skate_headset_dot > 0)
         {
             m_total_distance += Vector3.Magnitude(m_skate_diff);
-            Debug.Log(m_total_distance);
-        } else
-        {
-            //Debug.Log("--------------reset");
-            m_total_distance = 0;
         }
+        else
+        {
+            if (m_total_distance > 0)
+            {
+                //Debug.Log(m_total_distance);
+                if(m_total_distance > 0.5)
+                {
+                    m_reference_cameraRig.velocity = m_skate_diff * -5;
+                }
+                m_total_distance = 0;
+            }
+
+        }
+        
         
 
     }
