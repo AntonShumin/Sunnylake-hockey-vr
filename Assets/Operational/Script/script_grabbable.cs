@@ -13,6 +13,7 @@
         //cashed 
         private float impact_velocity;
         private Vector3 m_position_impact;
+        private Vector3 m_position_impact_target;
 
         void Start()
         {
@@ -46,8 +47,18 @@
             Vibrate(impact_velocity, 0.1f);
 
             //particles
-            m_position_impact = collision.transform.position;
-            //get collision point
+            m_position_impact_target = collision.gameObject.transform.position; //target position
+            m_position_impact = collision.contacts[0].point;
+            if (m_position_impact != null && m_particles_block != null && impact_velocity > 0.5f)
+            {
+                m_particles_block.transform.position = m_position_impact;
+                m_particles_block.transform.LookAt(m_position_impact_target);
+                m_particles_block.Stop();
+                m_particles_block.Play();
+            }
+            
+
+            
             
         }
 
