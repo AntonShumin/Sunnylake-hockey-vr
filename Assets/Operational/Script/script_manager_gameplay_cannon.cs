@@ -6,22 +6,17 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
 
     public enum GameState { None, Active, Shooting };
     private GameState m_game_state = GameState.None;
+    
 
     private script_manager_ui_world m_ui_world;
     private script_cannon m_cannon_easy;
 
     //puck management
-    public float m_shoot_frequency = 1.4f;
+    public float m_shoot_frequency; //1.4
     public GameObject m_puck_prefab;
     private Rigidbody[] m_pucks = new Rigidbody[5];
     private int m_current_puck = 0;
-    
     private IEnumerator shoot_coroutine;
-
-
-    //other
-    private script_cannon m_selected_cannon;
-    private Collider m_goal_collider_exit;
 
     //Scores
     private int m_score_positive;
@@ -37,6 +32,11 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
     private int m_stats_best;
     private int m_stats_record;
     private int m_stats_world;
+
+    //other
+    private script_cannon m_selected_cannon;
+    private Collider m_goal_collider_exit;
+    public script_cannon_settings[] m_cannon_settings_center;
 
     //cached
     private string[] score_array = new string[9];
@@ -68,7 +68,7 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
 
         //silent vars
         m_wave = 1;
-        m_wave_shots_left = 100;
+        m_wave_shots_left = 10;
     }
 
     void Start()
