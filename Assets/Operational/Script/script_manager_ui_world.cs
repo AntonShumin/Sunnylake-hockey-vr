@@ -66,7 +66,7 @@ public class script_manager_ui_world : MonoBehaviour {
         {
             case ("cannon"):
 
-                Show_Giant_Text("warm up", 1, "cannon fire");
+                Show_Giant_Text("warm up", 10, "cannon fire");
                 break;
             case ("cannon fire"):
                 Reset_scores();
@@ -81,11 +81,13 @@ public class script_manager_ui_world : MonoBehaviour {
             case ("return from summary"):
                 break;
             case ("giant text finish - cannon"):
+            case ("next wave start"):
                 m_manager_gameplay_cannon.Game_Event(event_name);
                 break;
         }
         
     }
+
 
     private void Reset_scores()
     {

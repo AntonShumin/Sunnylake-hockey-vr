@@ -54,6 +54,8 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
 
     private void Setup_Summary_Vars()
     {
+        m_cannon_easy.Set_Next_Wave_Stats(0);
+
         //visible vars
         m_score_positive = 0;
         m_score_negative = 0;
@@ -101,7 +103,6 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
                 m_game_state = GameState.Active;
                 break;
             case ("cannon fire"):
-                m_cannon_easy.Game_Event(event_name);
                 m_game_state = GameState.Shooting;
                 StartCoroutine(shoot_coroutine);
                 break;
@@ -116,19 +117,16 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
                 break;
             case ("stop cannon"):
                 m_game_state = GameState.Active;
-                m_cannon_easy.Game_Event("stop");
-                StopAllCoroutines();
                 StopCoroutine(shoot_coroutine);
                 break;
             case ("end wave"):
                 StartCoroutine(Sequence_End_Round());
                 break;
             case ("next wave"):
-                m_wave++;
-                if (m_wave == 2)
-                {
-                    m_ui_world.Show_Giant_Text("Well done", 5,"giant text finish - cannon");
-                }
+                SetupNextWave();
+                break;
+            case ("next wave start"):
+                Game_Event("cannon fire");
                 break;
             case ("End Round"):
                 m_game_state = GameState.None;
@@ -157,11 +155,28 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
         }
     }
 
+
+    private void SetupNextWave()
+    {
+        m_wave++;
+        m_wave_shots_left = 10;
+
+        if (m_wave < 5)
+        {
+            m_cannon_easy.Set_Next_Wave_Stats(m_wave - 1);
+            m_ui_world.Show_Giant_Text("Speed Up " + (m_wave - 1).ToString(), 5, "next wave start");
+            //m_ui_world.Show_Giant_Text("", 5, "giant text finish - cannon");
+        } else
+        {
+            m_ui_world.Show_Giant_Text("Game Over", 5, "giant text finish - cannon");
+        }
+    }
+
     public void Collider_Event(script_puck script, string type)
     {
         
         //puck exits the goal area
-        if (m_game_state == GameState.Shooting)
+        if (m_game_state == GameState.Shooting || m_game_state == GameState.Active)
         {
 
             if (type == "exit zone")
@@ -193,9 +208,6 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
     }
 
     
-
-    
-
     private void Build_Summary_Scores()
     {
 

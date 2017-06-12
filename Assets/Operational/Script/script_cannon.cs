@@ -4,10 +4,14 @@ using UnityEngine;
 
 public class script_cannon : MonoBehaviour {
 
+    
+
     //cannon stats
     public float m_shoot_strength = 100f;
-    public float m_height;
-    public float m_width;
+    public float m_height_top;
+    public float m_height_bottom;
+    public float m_width_max;
+    public float m_width_min;
 
     //spowner
     private Transform m_puck_spowner;
@@ -23,11 +27,11 @@ public class script_cannon : MonoBehaviour {
     private Animator m_Animator;
     private ParticleSystem m_particles;
     
-
-
     //cached vars
     private Quaternion m_puck_rotation = Quaternion.Euler(-90, 0, 0);
     private Vector3 m_vector_shoot = new Vector3(0, 0, -1f);
+
+    public script_cannon_settings[] m_cannon_settings;
 
     void Awake()
     {
@@ -39,16 +43,16 @@ public class script_cannon : MonoBehaviour {
         m_Audio_Source = GetComponent<AudioSource>();
     }
 
-    void Start()
+    public void Set_Next_Wave_Stats(int index)
     {
-        
+        m_shoot_strength = m_cannon_settings[index].m_velocity;
+        m_height_top = m_cannon_settings[index].m_height_top;
+        m_height_bottom = m_cannon_settings[index].m_heigh_bottom;
+        m_width_min = m_cannon_settings[index].m_width_min;
+        m_width_max = m_cannon_settings[index].m_width_max;
+
     }
 
-	
-	public void Game_Event(string event_name)
-    {
-        
-    }
 
     public void Shoot_prepare()
     {
@@ -77,12 +81,13 @@ public class script_cannon : MonoBehaviour {
         m_particles.Play();
 
         //move puck
+
+        m_vector_shoot.x = Random.Range(-m_width_max, m_width_max);
+        m_vector_shoot.y = Random.Range(m_height_bottom, m_height_top);
         /*
-        m_vector_shoot.x = Random.Range(-m_width, m_width);
-        m_vector_shoot.y = Random.Range(0.05f, m_height);
-        */
         m_vector_shoot.x = m_width;
         m_vector_shoot.y = m_height;
+        */
 
         puck.transform.position = m_puck_spowner_position;
         puck.transform.rotation = m_puck_rotation;
