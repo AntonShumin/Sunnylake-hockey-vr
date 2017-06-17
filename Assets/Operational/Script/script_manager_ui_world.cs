@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using DG.Tweening;
 
 public class script_manager_ui_world : MonoBehaviour {
 
@@ -11,6 +12,7 @@ public class script_manager_ui_world : MonoBehaviour {
     private GameObject m_count_negative;
     private GameObject m_big_title;
     private GameObject m_countdown;
+    private script_particles m_particles;
 
     private string m_last_event = "";
     private string m_timer_event_string = "";
@@ -29,6 +31,7 @@ public class script_manager_ui_world : MonoBehaviour {
         m_big_title = transform.Find("Big_title").gameObject;
         m_countdown = transform.Find("Countdown").gameObject;
         m_manager_gameplay_cannon = GameObject.Find("Manager_Gameplay").GetComponent<script_manager_gameplay_cannon>();
+        m_particles = GameObject.Find("Particles_UI").GetComponent<script_particles>();
 
         m_summary = GameObject.Find("Game Summary");
         m_summary_scores[0] = GameObject.Find("sum_score");
@@ -84,6 +87,12 @@ public class script_manager_ui_world : MonoBehaviour {
             case ("next wave start"):
                 m_manager_gameplay_cannon.Game_Event(event_name);
                 break;
+            case ("text hide animation done"):
+                m_big_title.GetComponent<DOTweenAnimation>().DORewind();
+                m_countdown.GetComponent<DOTweenAnimation>().DORewind();
+                m_big_title.SetActive(false);
+                m_countdown.SetActive(false);
+                break;
         }
         
     }
@@ -102,13 +111,16 @@ public class script_manager_ui_world : MonoBehaviour {
         {
             m_timer_value = 0;
             m_timer_active = false;
-            m_big_title.SetActive(false);
-            m_countdown.SetActive(false);
+            
+            m_big_title.GetComponent<DOTweenAnimation>().DOPlayById("hide");
+            m_countdown.GetComponent<DOTweenAnimation>().DOPlayById("hide");
+            m_particles.Game_Event("hover stop");
             if (m_timer_event_string != "")
             {
 
                 Game_Events(m_timer_event_string);
             }
+
         }
         m_countdown.GetComponent<TextMeshProUGUI>().text = m_timer_value.ToString("f2");
 
@@ -123,6 +135,11 @@ public class script_manager_ui_world : MonoBehaviour {
         m_big_title.GetComponent<TextMeshProUGUI>().text = text;
         m_timer_value = time;
         m_timer_active = true;
+        m_big_title.GetComponent<DOTweenAnimation>().DOPlayById("show");
+        m_countdown.GetComponent<DOTweenAnimation>().DOPlayById("show");
+
+        //particles
+        m_particles.Game_Event("hover start");
 
     }
 

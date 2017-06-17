@@ -36,7 +36,9 @@ public class script_particles : MonoBehaviour {
                 m_text_hover.Play();
                 m_text_onetimer.Play();
                 break;
-
+            case "hover stop":
+                m_text_hover.Stop();
+                break;
         }
     }
 
