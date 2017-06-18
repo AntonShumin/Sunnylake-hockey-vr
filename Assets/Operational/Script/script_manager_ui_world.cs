@@ -7,12 +7,15 @@ using DG.Tweening;
 
 public class script_manager_ui_world : MonoBehaviour {
 
+    public AudioClip[] m_sounds;
+
     private script_manager_gameplay_cannon m_manager_gameplay_cannon;
     private GameObject m_count_positive;
     private GameObject m_count_negative;
     private GameObject m_big_title;
     private GameObject m_countdown;
     private script_particles m_particles;
+    private AudioSource m_sound_source;
 
     private string m_last_event = "";
     private string m_timer_event_string = "";
@@ -32,6 +35,7 @@ public class script_manager_ui_world : MonoBehaviour {
         m_countdown = transform.Find("Countdown").gameObject;
         m_manager_gameplay_cannon = GameObject.Find("Manager_Gameplay").GetComponent<script_manager_gameplay_cannon>();
         m_particles = GameObject.Find("Particles_UI").GetComponent<script_particles>();
+        m_sound_source = GetComponent<AudioSource>();
 
         m_summary = GameObject.Find("Game Summary");
         m_summary_scores[0] = GameObject.Find("sum_score");
@@ -111,9 +115,9 @@ public class script_manager_ui_world : MonoBehaviour {
         {
             m_timer_value = 0;
             m_timer_active = false;
-            
             m_big_title.GetComponent<DOTweenAnimation>().DOPlayById("hide");
             m_countdown.GetComponent<DOTweenAnimation>().DOPlayById("hide");
+            m_sound_source.PlayOneShot(m_sounds[1]);
             m_particles.Game_Event("hover stop");
             if (m_timer_event_string != "")
             {
@@ -135,6 +139,7 @@ public class script_manager_ui_world : MonoBehaviour {
         m_big_title.GetComponent<TextMeshProUGUI>().text = text;
         m_timer_value = time;
         m_timer_active = true;
+        m_sound_source.PlayOneShot(m_sounds[0]);
         m_big_title.GetComponent<DOTweenAnimation>().DOPlayById("show");
         m_countdown.GetComponent<DOTweenAnimation>().DOPlayById("show");
 

@@ -61,13 +61,13 @@ public class script_cannon : MonoBehaviour {
 
         //play sound
         m_Audio_Source.pitch = 0.6f + Random.Range(0, 80) / 100f;
-        m_Audio_Source.PlayOneShot(m_Sounds_Other[0],0.05f );
+        m_Audio_Source.PlayOneShot(m_Sounds_Other[0],0.3f );
     }
 
     public void Shoot_play_sound()
     {
         //play sound
-        m_Audio_Source.PlayOneShot(m_Sounds_Shoot[Random.Range(0, 4)], 0.1f);
+        m_Audio_Source.PlayOneShot(m_Sounds_Shoot[Random.Range(0, 4)], 0.4f);
     }
 
     public void Shoot(Rigidbody puck)
@@ -81,12 +81,13 @@ public class script_cannon : MonoBehaviour {
         m_particles.Play();
 
         //move puck
+        
+       m_vector_shoot.x = Random.Range(m_width_min, m_width_max);
+       m_vector_shoot.y = Random.Range(m_height_bottom, m_height_top);
 
-        m_vector_shoot.x = Random.Range(-m_width_max, m_width_max);
-        m_vector_shoot.y = Random.Range(m_height_bottom, m_height_top);
         /*
-        m_vector_shoot.x = m_width;
-        m_vector_shoot.y = m_height;
+        m_vector_shoot.x = m_width_max;
+        m_vector_shoot.y = m_height_top;
         */
 
         puck.transform.position = m_puck_spowner_position;

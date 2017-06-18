@@ -34,10 +34,12 @@ public class script_particles : MonoBehaviour {
 
             case "hover play":
                 m_text_hover.Play();
+                m_text_hover.GetComponent<AudioSource>().Play();
                 m_text_onetimer.Play();
                 break;
             case "hover stop":
                 m_text_hover.Stop();
+                m_text_hover.GetComponent<AudioSource>().Stop();
                 break;
         }
     }

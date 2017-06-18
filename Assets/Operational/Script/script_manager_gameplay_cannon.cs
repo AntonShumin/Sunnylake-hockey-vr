@@ -9,7 +9,10 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
     
 
     private script_manager_ui_world m_ui_world;
-    private script_cannon m_cannon_easy;
+    private script_cannon m_cannon_center;
+    private script_cannon m_cannon_left;
+    private script_cannon m_cannon_right;
+    private script_cannon[] m_cannons = new script_cannon[3];
 
     //puck management
     public float m_shoot_frequency; //1.4
@@ -47,14 +50,21 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
     void Awake()
     {
         m_ui_world = GameObject.Find("World Canvas").GetComponent<script_manager_ui_world>();
-        m_cannon_easy = GameObject.Find("Cannon C").GetComponent<script_cannon>();
-        
+        m_cannon_center = GameObject.Find("Cannon C").GetComponent<script_cannon>();
+        m_cannon_left = GameObject.Find("Cannon L").GetComponent<script_cannon>();
+        m_cannon_right = GameObject.Find("Cannon R").GetComponent<script_cannon>();
+        m_cannons[0] = m_cannon_center;
+        m_cannons[1] = m_cannon_left;
+        m_cannons[2] = m_cannon_right;
+
         Setup_Summary_Vars();
     }
 
     private void Setup_Summary_Vars()
     {
-        m_cannon_easy.Set_Next_Wave_Stats(0);
+        m_cannon_center.Set_Next_Wave_Stats(0);
+        m_cannon_left.Set_Next_Wave_Stats(0);
+        m_cannon_right.Set_Next_Wave_Stats(0);
 
         //visible vars
         m_score_positive = 0;
@@ -163,7 +173,9 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
 
         if (m_wave < 5)
         {
-            m_cannon_easy.Set_Next_Wave_Stats(m_wave - 1);
+            m_cannon_center.Set_Next_Wave_Stats(m_wave - 1);
+            m_cannon_left.Set_Next_Wave_Stats(m_wave - 1);
+            m_cannon_right.Set_Next_Wave_Stats(m_wave - 1);
             m_ui_world.Show_Giant_Text("Speed Up " + (m_wave - 1).ToString(), 5, "next wave start");
             //m_ui_world.Show_Giant_Text("", 5, "giant text finish - cannon");
         } else
@@ -237,7 +249,7 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
         while (true)
         {
             //select cannon
-            m_selected_cannon = m_cannon_easy;
+            m_selected_cannon = m_cannons[Random.Range(0, 3)];
             m_selected_cannon.Shoot_prepare();
             yield return new WaitForSeconds(0.4f);
 
