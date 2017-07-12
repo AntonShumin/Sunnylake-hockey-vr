@@ -223,15 +223,15 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
     private void Build_Summary_Scores()
     {
 
-        score_array[0] = "Round score: " + m_score_positive; //round score
+        score_array[0] = "Score: " + m_score_positive; //round score
         score_array[1] = "Saves made: " + m_stats_saves; //saves made
         score_array[2] = "Goals allowed: " + m_stats_allowed; //goals allowed
         score_array[3] = "Round time: " + Seconds_to_time(m_stats_time) ; //round time
         score_array[4] = "Games played: " + m_stats_games_played; // games played
         score_array[5] = "Tital saves: " + m_stats_saves_total; // total saves
         score_array[6] = "BEST ROUND: <color=#5ACFFFFF>: " + m_stats_best + "</color> points"; // best round points
-        score_array[7] = "7 Days record: " + m_stats_record; // 7 days record
-        score_array[8] = "World position: " + m_stats_world; // word position
+        score_array[7] = "Record: " + m_stats_record; // 7 days record
+        //score_array[8] = "World position: " + m_stats_world; // word position
 
         m_ui_world.Show_Summary("cannon", score_array);
     }

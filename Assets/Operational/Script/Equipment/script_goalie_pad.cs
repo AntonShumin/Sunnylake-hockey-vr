@@ -52,6 +52,8 @@ public class script_goalie_pad : MonoBehaviour {
         c_pg = m_Ground.position;
         c_stick_offset = m_stick.position - m_pad_reference_ground.position;
 
+        //fix handle
+
     }
 
 	void FixedUpdate()
