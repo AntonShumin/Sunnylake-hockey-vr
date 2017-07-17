@@ -26,6 +26,7 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
     private int m_score_negative;
     public int m_wave;
     public int m_wave_shots_left;
+    private int m_wave_max = 1; //current max 4
 
     private int m_stats_saves;
     private int m_stats_allowed;
@@ -171,7 +172,7 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
         m_wave++;
         m_wave_shots_left = 10;
 
-        if (m_wave < 5)
+        if (m_wave <= m_wave_max)
         {
             m_cannon_center.Set_Next_Wave_Stats(m_wave - 1);
             m_cannon_left.Set_Next_Wave_Stats(m_wave - 1);
@@ -222,18 +223,55 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
     
     private void Build_Summary_Scores()
     {
+        //load vars
 
+        //saves total
+        m_stats_saves_total = m_score_positive;
+        if ( ES2.Exists("cannon_total_saves") )
+        {
+            m_stats_saves_total += ES2.Load<int>("cannon_total_saves");
+            Debug.Log("total is " + m_stats_saves_total);
+        }
+        //record
+        if (ES2.Exists("cannon_record"))
+        {
+            m_stats_record = Mathf.Max(m_score_positive, ES2.Load<int>("cannon_record"));
+        } else
+        {
+            m_stats_record = m_score_positive;
+        }
+        //games played
+        m_stats_games_played = 1;
+        if (ES2.Exists("cannon_games_played"))
+        {
+            m_stats_games_played += ES2.Load<int>("cannon_games_played");
+        }
+
+        //saving
+        ES2.Save(m_stats_saves_total, "cannon_total_saves");
+        ES2.Save(m_stats_record, "cannon_record");
+        ES2.Save(m_stats_games_played, "cannon_games_played");
+
+
+        //buid ui array 
         score_array[0] = "Score: " + m_score_positive; //round score
         score_array[1] = "Saves made: " + m_stats_saves; //saves made
         score_array[2] = "Goals allowed: " + m_stats_allowed; //goals allowed
         score_array[3] = "Round time: " + Seconds_to_time(m_stats_time) ; //round time
         score_array[4] = "Games played: " + m_stats_games_played; // games played
-        score_array[5] = "Tital saves: " + m_stats_saves_total; // total saves
+        score_array[5] = "Total saves: " + m_stats_saves_total; // total saves
         score_array[6] = "BEST ROUND: <color=#5ACFFFFF>: " + m_stats_best + "</color> points"; // best round points
         score_array[7] = "Record: " + m_stats_record; // 7 days record
         //score_array[8] = "World position: " + m_stats_world; // word position
 
         m_ui_world.Show_Summary("cannon", score_array);
+        foreach( string s in score_array)
+        {
+            Debug.Log(s);
+        }
+        
+
+        
     }
 
     private string Seconds_to_time(float sec)

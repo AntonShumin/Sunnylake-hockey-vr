@@ -24,7 +24,7 @@ public class script_manager_ui_world : MonoBehaviour {
 
     private GameObject m_ui_main;
     private GameObject m_summary;
-    private GameObject[] m_summary_scores = new GameObject[9];
+    private GameObject[] m_summary_scores;
 
 
     void Awake()
@@ -38,6 +38,7 @@ public class script_manager_ui_world : MonoBehaviour {
         m_sound_source = GetComponent<AudioSource>();
 
         m_summary = GameObject.Find("Game Summary");
+        m_summary_scores = new GameObject[8];
         m_summary_scores[0] = GameObject.Find("sum_score");
         m_summary_scores[1] = GameObject.Find("sum_saves");
         m_summary_scores[2] = GameObject.Find("sum_allowed");
@@ -162,7 +163,7 @@ public class script_manager_ui_world : MonoBehaviour {
     {
         if(type == "cannon")
         {
-            for( int i = 0; i < score_array.Length; i++ )
+            for( int i = 0; i < score_array.Length - 1; i++ )
             {
                 m_summary_scores[i].GetComponent<Text>().text = score_array[i];
 

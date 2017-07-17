@@ -3,6 +3,7 @@
 /[Oo]bj/
 /[Bb]uild/
 /[Bb]uilds/
+/Assets/Plugins*
 /Assets/AssetStoreTools*
 /Assets/Behavior Designer/*
 /Assets/Behavior Designer Movement/*
