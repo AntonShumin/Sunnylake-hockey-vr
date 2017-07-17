@@ -26,7 +26,7 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
     private int m_score_negative;
     public int m_wave;
     public int m_wave_shots_left;
-    private int m_wave_max = 1; //current max 4
+    private int m_wave_max = 4; //current max 4
 
     private int m_stats_saves;
     private int m_stats_allowed;
@@ -75,7 +75,7 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
         m_stats_time = 0;
         m_stats_games_played = 100;
         m_stats_saves_total = 200;
-        m_stats_best = 250;
+        m_stats_best = 10;
         m_stats_record = 300;
         m_stats_world = 8;
 
@@ -260,7 +260,7 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
         score_array[3] = "Round time: " + Seconds_to_time(m_stats_time) ; //round time
         score_array[4] = "Games played: " + m_stats_games_played; // games played
         score_array[5] = "Total saves: " + m_stats_saves_total; // total saves
-        score_array[6] = "BEST ROUND: <color=#5ACFFFFF>: " + m_stats_best + "</color> points"; // best round points
+        score_array[6] = "World: TOP <color=#5ACFFFFF> " + m_stats_best + "</color>"; // best round points
         score_array[7] = "Record: " + m_stats_record; // 7 days record
         //score_array[8] = "World position: " + m_stats_world; // word position
 

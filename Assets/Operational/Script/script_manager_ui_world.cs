@@ -45,7 +45,7 @@ public class script_manager_ui_world : MonoBehaviour {
         m_summary_scores[3] = GameObject.Find("sum_time");
         m_summary_scores[4] = GameObject.Find("sum_games");
         m_summary_scores[5] = GameObject.Find("sum_total_saves");
-        m_summary_scores[6] = GameObject.Find("sum_best");
+        m_summary_scores[6] = GameObject.Find("sum_position");
         m_summary_scores[7] = GameObject.Find("sum_record");
         //m_summary_scores[8] = GameObject.Find("sum_position");
 
@@ -86,7 +86,9 @@ public class script_manager_ui_world : MonoBehaviour {
                 m_summary.SetActive(false);
                 m_manager_gameplay_cannon.Game_Event("cannon");
                 break;
-            case ("return from summary"):
+            case ("home from summary"):
+                Show_main_ui();
+
                 break;
             case ("giant text finish - cannon"):
             case ("next wave start"):
@@ -175,6 +177,11 @@ public class script_manager_ui_world : MonoBehaviour {
     public void Show_main_ui()
     {
         m_ui_main.SetActive(true);
+    }
+
+    public void Hide_Summary()
+    {
+        m_summary.SetActive(false);
     }
 
    
