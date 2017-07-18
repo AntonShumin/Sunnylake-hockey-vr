@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class script_manager_ui : MonoBehaviour {
 
-    private script_manager_gameplay m_manager_gameplay; 
+    private script_manager_gameplay m_manager_gameplay;
+    private script_manager_ui_world m_manager_ui_world;
 
     private GameObject m_ui_main;
     private List<GameObject> m_ui_main_children = new List<GameObject>();
@@ -19,6 +20,7 @@ public class script_manager_ui : MonoBehaviour {
         m_ui_main_goalie = GameObject.Find("UI_Main_Goalie").gameObject;
         
         m_manager_gameplay = GameObject.Find("Manager_Gameplay").GetComponent<script_manager_gameplay>();
+        m_manager_ui_world = GameObject.Find("World Canvas").GetComponent<script_manager_ui_world>();
     }
 
 	// Use this for initialization
@@ -58,7 +60,7 @@ public class script_manager_ui : MonoBehaviour {
                 foreach (GameObject child in m_uit_main_goalie_children)        {                    child.SetActive(false);               }
                 break;
             case "cannon":
-                transform.position = new Vector3(0, -20, 0);
+                m_manager_ui_world.Hide_main_ui();
                 m_manager_gameplay.Game_Event(id);
                 break;
         }

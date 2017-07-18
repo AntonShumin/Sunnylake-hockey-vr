@@ -41,6 +41,9 @@ public class script_particles : MonoBehaviour {
                 m_text_hover.Stop();
                 m_text_hover.GetComponent<AudioSource>().Stop();
                 break;
+            case "onetimer":
+                m_text_onetimer.Play();
+                break;
         }
     }
 

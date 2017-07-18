@@ -16,6 +16,8 @@ public class script_manager_ui_world : MonoBehaviour {
     private GameObject m_countdown;
     private script_particles m_particles;
     private AudioSource m_sound_source;
+    private GameObject m_camera_rig;
+    private Vector3 m_camera_rig_ui_offset;
 
     private string m_last_event = "";
     private string m_timer_event_string = "";
@@ -25,6 +27,9 @@ public class script_manager_ui_world : MonoBehaviour {
     private GameObject m_ui_main;
     private GameObject m_summary;
     private GameObject[] m_summary_scores;
+
+    //cached 
+    private Vector3 c_position;
 
 
     void Awake()
@@ -36,6 +41,7 @@ public class script_manager_ui_world : MonoBehaviour {
         m_manager_gameplay_cannon = GameObject.Find("Manager_Gameplay").GetComponent<script_manager_gameplay_cannon>();
         m_particles = GameObject.Find("Particles_UI").GetComponent<script_particles>();
         m_sound_source = GetComponent<AudioSource>();
+        
 
         m_summary = GameObject.Find("Game Summary");
         m_summary_scores = new GameObject[8];
@@ -51,6 +57,8 @@ public class script_manager_ui_world : MonoBehaviour {
 
         //UI Main
         m_ui_main = GameObject.Find("User Interface");
+        m_camera_rig = GameObject.Find("[CameraRig]").gameObject;
+        m_camera_rig_ui_offset = m_ui_main.transform.position - m_camera_rig.transform.position;
     }
 
 	// Use this for initialization
@@ -60,6 +68,7 @@ public class script_manager_ui_world : MonoBehaviour {
         m_big_title.SetActive(false);
         m_countdown.SetActive(false);
         m_summary.SetActive(false);
+        
     }
 	
 	// Update is called once per frame
@@ -83,12 +92,12 @@ public class script_manager_ui_world : MonoBehaviour {
                 m_manager_gameplay_cannon.Game_Event(event_name);
                 break;
             case ("replay cannon"):
-                m_summary.SetActive(false);
+                Hide_Summary();
                 m_manager_gameplay_cannon.Game_Event("cannon");
                 break;
             case ("home from summary"):
                 Show_main_ui();
-
+                Hide_Summary();
                 break;
             case ("giant text finish - cannon"):
             case ("next wave start"):
@@ -99,6 +108,10 @@ public class script_manager_ui_world : MonoBehaviour {
                 m_countdown.GetComponent<DOTweenAnimation>().DORewind();
                 m_big_title.SetActive(false);
                 m_countdown.SetActive(false);
+                break;
+            case ("summary hide"):
+                m_summary.GetComponent<DOTweenAnimation>().DORewind();
+                m_summary.SetActive(false);
                 break;
         }
         
@@ -171,17 +184,47 @@ public class script_manager_ui_world : MonoBehaviour {
 
             }
         }
-        m_summary.SetActive(true);
+        Show_Summary();
     }
 
     public void Show_main_ui()
     {
+        c_position = m_camera_rig.transform.position + m_camera_rig_ui_offset;
+        m_ui_main.transform.position = c_position;
+        c_position.y += 100;
         m_ui_main.SetActive(true);
+        m_ui_main.transform.DOMove(c_position,0.6f).From().SetEase(Ease.OutExpo);
+        m_sound_source.PlayOneShot(m_sounds[2]);
+
+
+    }
+
+    public void Hide_main_ui()
+    {
+        c_position = m_ui_main.transform.position;
+        c_position.y += 100;
+        m_ui_main.transform.DOMove(c_position, 0.6f).SetEase(Ease.InExpo).OnComplete(Hide_main_ui_complete);
+        m_sound_source.PlayOneShot(m_sounds[3]);
+
+    }
+
+    private void Hide_main_ui_complete()
+    {
+        m_ui_main.SetActive(false);
+    }
+
+    public void Show_Summary()
+    {
+        //m_particles.Game_Event("onetimer");
+        m_sound_source.PlayOneShot(m_sounds[2]);
+        m_summary.SetActive(true);
+        m_summary.GetComponent<DOTweenAnimation>().DOPlayById("show");
     }
 
     public void Hide_Summary()
     {
-        m_summary.SetActive(false);
+        m_summary.GetComponent<DOTweenAnimation>().DOPlayById("hide");
+        m_sound_source.PlayOneShot(m_sounds[3]);
     }
 
    

@@ -43,7 +43,7 @@
             impact_velocity = Mathf.Max(0.05f,impact_velocity);
 
             //vibrate
-            Debug.Log("haptic strength " + impact_velocity);
+            //Debug.Log("haptic strength " + impact_velocity);
             Vibrate(impact_velocity, 0.1f);
 
             //particles
