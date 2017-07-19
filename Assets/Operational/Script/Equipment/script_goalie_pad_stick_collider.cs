@@ -15,7 +15,7 @@
         
         void Awake()
         {
-            m_script_controller = transform.parent.parent.GetComponentInChildren<script_grabbable>();
+            
         } 
 
         public void OnCollisionEnter(Collision collision)

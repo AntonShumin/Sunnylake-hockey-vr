@@ -49,6 +49,7 @@ public class script_manager_ui : MonoBehaviour {
 
     public void ButtonPressed(string id)
     {
+        m_manager_ui_world.Game_Events("button press");
         switch (id)
         {
             case "goalie":

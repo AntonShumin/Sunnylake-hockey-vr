@@ -113,6 +113,12 @@ public class script_manager_ui_world : MonoBehaviour {
                 m_summary.GetComponent<DOTweenAnimation>().DORewind();
                 m_summary.SetActive(false);
                 break;
+            case ("ui hover sound"):
+                m_sound_source.PlayOneShot(m_sounds[4]);
+                break;
+            case ("button press"):
+                m_sound_source.PlayOneShot(m_sounds[5]);
+                break;
         }
         
     }

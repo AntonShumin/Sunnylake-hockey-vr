@@ -5,6 +5,7 @@
 /[Bb]uilds/
 /Assets/Plugins*
 /Assets/AssetStoreTools*
+/Assets/Particle Playground*
 /Assets/Behavior Designer/*
 /Assets/Behavior Designer Movement/*
 /Assets/Import/*
