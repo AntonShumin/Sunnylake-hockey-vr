@@ -3,12 +3,14 @@
     using System.Collections;
     using System.Collections.Generic;
     using UnityEngine;
+    using ParticlePlayground;
 
     public class script_grabbable : VRTK_InteractableObject
     {
 
         private GameObject grabbingController;
         private ParticleSystem m_particles_block;
+        private PlaygroundParticlesC m_particles_block_special;
 
         //cashed 
         private float impact_velocity;
@@ -18,6 +20,7 @@
         void Start()
         {
             m_particles_block = GameObject.Find("particles_block").GetComponent<ParticleSystem>();
+            m_particles_block_special = GameObject.Find("particles_block_special").GetComponent<PlaygroundParticlesC>();
         }
 
         public override void Grabbed(GameObject grabbingObject)
@@ -55,6 +58,11 @@
                 m_particles_block.transform.LookAt(m_position_impact_target);
                 m_particles_block.Stop();
                 m_particles_block.Play();
+
+                //special
+                m_particles_block_special.transform.position = m_position_impact;
+                m_particles_block_special.transform.LookAt(m_position_impact_target);
+                m_particles_block_special.Emit();
             }
             
 

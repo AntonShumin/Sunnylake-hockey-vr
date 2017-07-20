@@ -20,9 +20,9 @@ public class script_button_hover : MonoBehaviour {
 
     public void PointerEnter()
     {
-        Debug.Log("enter");
+        //Debug.Log("enter");
         //transform.localScale = c_scale_hover;
-        c_tween = transform.DOScale(c_scale_hover, 0.1f);
+        //c_tween = transform.DOScale(c_scale_hover, 0.1f);
         m_manager_world.Game_Events("ui hover sound");
         
     }
@@ -30,8 +30,8 @@ public class script_button_hover : MonoBehaviour {
     public void PointerExit()
     {
         Debug.Log("exit");
-        c_tween.Kill();
-        transform.localScale = c_scale_original;
+        //c_tween.Kill();
+        //transform.localScale = c_scale_original;
         //m_manager_world.Game_Events("ui unhover sound");
     }
 }
