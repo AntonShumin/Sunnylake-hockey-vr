@@ -25,8 +25,8 @@ public class script_manager_gameplay : MonoBehaviour {
 	void Start () {
         if(m_testing)
         {
-            //m_manager_gameplay_cannon.Game_Event("cannon");
-            m_ui_world.Show_main_ui();
+            m_manager_gameplay_cannon.Game_Event("cannon");
+            //m_ui_world.Show_main_ui();
             //m_manager_gameplay_cannon.Game_Event("build summary");
         }
 	}

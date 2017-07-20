@@ -265,10 +265,12 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
         //score_array[8] = "World position: " + m_stats_world; // word position
 
         m_ui_world.Show_Summary("cannon", score_array);
+        /*
         foreach( string s in score_array)
         {
             Debug.Log(s);
         }
+        */
         
 
         

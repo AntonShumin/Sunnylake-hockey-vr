@@ -83,7 +83,7 @@ public class script_manager_ui_world : MonoBehaviour {
         {
             case ("cannon"):
 
-                Show_Giant_Text("warm up", 10, "cannon fire");
+                Show_Giant_Text("warm up", 2, "cannon fire"); //original 10
                 break;
             case ("cannon fire"):
                 Reset_scores();
