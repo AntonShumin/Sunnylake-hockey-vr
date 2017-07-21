@@ -17,10 +17,8 @@ public class script_goal_score : MonoBehaviour {
     public void OnTriggerEnter(Collider collider)
     {
 
-        Debug.Log("trigger ok");
         if (collider.GetComponent<script_puck>())
         {
-            Debug.Log("puck script ok");
             m_script_puck = collider.GetComponent<script_puck>();
             if (m_script_puck.m_cannon_fired == true)
             {

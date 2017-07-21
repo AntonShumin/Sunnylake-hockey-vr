@@ -81,9 +81,10 @@ public class script_cannon : MonoBehaviour {
         m_particles.Play();
 
         //move puck
-        
-       m_vector_shoot.x = Random.Range(m_width_min, m_width_max);
-       m_vector_shoot.y = Random.Range(m_height_bottom, m_height_top);
+
+        //m_vector_shoot.x = Random.Range(m_width_min, m_width_max);
+        m_vector_shoot.x = Random.Range(m_width_max, -m_width_max);
+        m_vector_shoot.y = Random.Range(m_height_bottom, m_height_top);
 
         /*
         m_vector_shoot.x = m_width_max;
@@ -95,4 +96,5 @@ public class script_cannon : MonoBehaviour {
         puck.GetComponent<script_puck>().m_cannon_fired = true;
         puck.velocity = m_vector_shoot * m_shoot_strength;
     }
+
 }

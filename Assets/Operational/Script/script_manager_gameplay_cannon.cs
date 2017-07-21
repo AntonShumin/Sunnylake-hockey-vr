@@ -40,7 +40,6 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
     //other
     private script_cannon m_selected_cannon;
     private Collider m_goal_collider_exit;
-    public script_cannon_settings[] m_cannon_settings_center;
 
     //cached
     private string[] score_array = new string[9];
@@ -59,6 +58,7 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
         m_cannons[2] = m_cannon_right;
 
         Setup_Summary_Vars();
+        Setup_Cannon_Vars();
     }
 
     private void Setup_Summary_Vars()
@@ -81,7 +81,7 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
 
         //silent vars
         m_wave = 1;
-        m_wave_shots_left = 10;
+        m_wave_shots_left = 1000; //normal 10
     }
 
     void Start()
@@ -169,7 +169,19 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
 
     private void SetupNextWave()
     {
-        m_wave++;
+        //preset vars
+        string giant_text_message = "";
+
+        //check for speed round
+        if(m_cannons[0].m_cannon_settings[m_wave - 1].m_speedy)
+        {
+            giant_text_message = ""
+            m_cannons[0].m_cannon_settings[m_wave - 1].m_speedy = false;
+        } else
+        {
+            m_wave++;
+        }
+        
         m_wave_shots_left = 10;
 
         if (m_wave <= m_wave_max)
@@ -289,7 +301,8 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
         while (true)
         {
             //select cannon
-            m_selected_cannon = m_cannons[Random.Range(0, 3)];
+            //m_selected_cannon = m_cannons[Random.Range(0, 3)];
+            m_selected_cannon = m_cannons[0];
             m_selected_cannon.Shoot_prepare();
             yield return new WaitForSeconds(0.4f);
 
@@ -315,6 +328,54 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
 
 
         }
+    }
+
+    private void Setup_Cannon_Vars()
+    {
+        //setup special wave levels
+        //hot and speedy
+        int[] hot_list = new int[3] { 1,2,3 };
+        hot_list = Shuffle(hot_list);
+        int not_hot = Random.Range(1, 4); // wave 2,3,4
+        int is_speedy = Random.Range(1, 3); //pick speedy wave 2 or 3
+        for (int i = 1; i<=3; i++)
+        {
+            if(i != not_hot)
+            {
+
+                m_cannons[0].m_cannon_settings[i].m_hot = (script_cannon_settings.hot)hot_list[i-1];
+            }
+            if(i == is_speedy)
+            {
+                m_cannons[0].m_cannon_settings[i].m_speedy = true;
+            }
+        }
+        
+
+        //synchronize cannon settings to the center cannon preset
+        for(int y = 0; y < m_cannons[0].m_cannon_settings.Length; y++)
+        {
+            for (int i = 1; i <= 2; i++)
+            {
+                m_cannons[i].m_cannon_settings[y].m_max_shots = m_cannons[0].m_cannon_settings[y].m_max_shots;
+                m_cannons[i].m_cannon_settings[y].m_speedy = m_cannons[0].m_cannon_settings[y].m_speedy;
+                m_cannons[i].m_cannon_settings[y].m_hot = m_cannons[0].m_cannon_settings[y].m_hot;
+            }
+        }
+        
+    }
+
+    public int[] Shuffle(int[] decklist)
+    {
+        for (int t = 0; t < decklist.Length; t++)
+        {
+            int tmp = decklist[t];
+            int r = Random.Range(t, decklist.Length);
+            decklist[t] = decklist[r];
+            decklist[r] = tmp;
+        }
+
+        return decklist;
     }
 
 
