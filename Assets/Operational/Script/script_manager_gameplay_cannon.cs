@@ -175,21 +175,30 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
         //check for speed round
         if(m_cannons[0].m_cannon_settings[m_wave - 1].m_speedy)
         {
-            giant_text_message = ""
+            giant_text_message = "Speed round!";
             m_cannons[0].m_cannon_settings[m_wave - 1].m_speedy = false;
         } else
         {
+            
             m_wave++;
+            giant_text_message = "Speed up!" + (m_wave - 1).ToString();
+            if (m_cannons[0].m_cannon_settings[m_wave - 1].m_hot != script_cannon_settings.hot.none)
+            {
+                giant_text_message += " Hot " + m_cannons[0].m_cannon_settings[m_wave - 1].m_hot;
+            }
+            
+
         }
         
         m_wave_shots_left = 10;
 
         if (m_wave <= m_wave_max)
         {
+            m_wave_shots_left = m_cannons[0].m_cannon_settings[m_wave - 1].m_max_shots;
             m_cannon_center.Set_Next_Wave_Stats(m_wave - 1);
             m_cannon_left.Set_Next_Wave_Stats(m_wave - 1);
             m_cannon_right.Set_Next_Wave_Stats(m_wave - 1);
-            m_ui_world.Show_Giant_Text("Speed Up " + (m_wave - 1).ToString(), 5, "next wave start");
+            m_ui_world.Show_Giant_Text(giant_text_message, 5, "next wave start");
             //m_ui_world.Show_Giant_Text("", 5, "giant text finish - cannon");
         } else
         {
