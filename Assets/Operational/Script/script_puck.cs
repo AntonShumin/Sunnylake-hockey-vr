@@ -7,6 +7,9 @@ public class script_puck : MonoBehaviour {
     //public
     public bool m_cannon_fired = false;
 
+    //static
+    private static script_cannon_settings.hot m_hot;
+
     //private
     private float m_time_idle = 0f;
     private Rigidbody m_rigidbody;
@@ -40,6 +43,11 @@ public class script_puck : MonoBehaviour {
         {
             m_time_idle = 0f;
         }
+    }
+
+    public static void set_hot(script_cannon_settings.hot hot)
+    {
+        m_hot = hot;
     }
 
 

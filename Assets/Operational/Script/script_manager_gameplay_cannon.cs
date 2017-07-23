@@ -26,7 +26,7 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
     private int m_score_negative;
     public int m_wave;
     public int m_wave_shots_left;
-    private int m_wave_max = 1; //current max 4
+    private int m_wave_max = 5; //current max 4
 
     private int m_stats_saves;
     private int m_stats_allowed;
@@ -56,16 +56,12 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
         m_cannons[0] = m_cannon_center;
         m_cannons[1] = m_cannon_left;
         m_cannons[2] = m_cannon_right;
-
-        Setup_Summary_Vars();
+        shoot_coroutine = Shoot_Puck();
         Setup_Cannon_Vars();
     }
 
     private void Setup_Summary_Vars()
     {
-        m_cannon_center.Set_Next_Wave_Stats(0);
-        m_cannon_left.Set_Next_Wave_Stats(0);
-        m_cannon_right.Set_Next_Wave_Stats(0);
 
         //visible vars
         m_score_positive = 0;
@@ -80,19 +76,19 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
         m_stats_world = 8;
 
         //silent vars
-        m_wave = 1;
-        m_wave_shots_left = 1000; //normal 10
+        m_wave = 0;
+        m_wave_shots_left = 0;
+        
     }
 
     void Start()
     {
-        Game_Event("setup summary");
         for (int i = 0; i < 5; i++)
         {
             m_pucks[i] = GameObject.Instantiate(m_puck_prefab, new Vector3(132,10,127), Quaternion.identity).GetComponent<Rigidbody>();
             //m_pucks[i].gameObject.SetActive(false);
         }
-        shoot_coroutine = Shoot_Puck();
+        
         m_goal_collider_exit = GameObject.Find("Collider Exit").GetComponent<Collider>();
     }
 
@@ -109,8 +105,9 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
         switch(event_name)
         {
             case ("cannon"):
-                m_ui_world.Game_Events(event_name);
                 Game_Event("setup summary");
+                Game_Event("next wave");
+                //Game_Event("next wave start");
                 m_game_state = GameState.Active;
                 break;
             case ("cannon fire"):
@@ -171,35 +168,75 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
     {
         //preset vars
         string giant_text_message = "";
+        bool speedy_round = false;
 
         //check for speed round
-        if(m_cannons[0].m_cannon_settings[m_wave - 1].m_speedy)
+        if(m_wave == 0)
         {
-            giant_text_message = "Speed round!";
-            m_cannons[0].m_cannon_settings[m_wave - 1].m_speedy = false;
-        } else
-        {
-            
-            m_wave++;
-            giant_text_message = "Speed up!" + (m_wave - 1).ToString();
-            if (m_cannons[0].m_cannon_settings[m_wave - 1].m_hot != script_cannon_settings.hot.none)
-            {
-                giant_text_message += " Hot " + m_cannons[0].m_cannon_settings[m_wave - 1].m_hot;
-            }
-            
 
+            m_wave++;
+            giant_text_message = "Warm Up";
+
+                
+        }
+        //not the very first wave
+        else
+        {
+            //speedy round
+            if (m_cannons[0].m_cannon_settings[m_wave - 1].m_speedy)
+            {
+                //set vars
+                speedy_round = true;
+                m_cannons[0].m_cannon_settings[m_wave - 1].m_speedy = false;
+
+                //the very last wave
+                if (m_wave == m_cannons[0].m_cannon_settings.Length) 
+                {
+                    giant_text_message = "Final stand!";
+                    giant_text_message += " Hot " + m_cannons[0].m_cannon_settings[m_wave - 1].m_hot.ToString();
+                    script_puck.set_hot(m_cannons[0].m_cannon_settings[m_wave - 1].m_hot);
+                }
+                //not last wave
+                else
+                {
+                    giant_text_message = "Speed round";
+
+                }
+
+            }
+            //non speedy round
+            else
+            {
+
+                //set vars
+                m_wave++;
+                giant_text_message = "Speed up" + (m_wave - 1).ToString();
+
+                //hot is set, not last wave
+                if (m_cannons[0].m_cannon_settings[m_wave - 1].m_hot != script_cannon_settings.hot.none && m_wave != m_cannons[0].m_cannon_settings.Length - 1)
+                {
+                    giant_text_message += " Hot " + m_cannons[0].m_cannon_settings[m_wave - 1].m_hot.ToString();
+                    script_puck.set_hot(m_cannons[0].m_cannon_settings[m_wave - 1].m_hot);
+                }
+
+
+            }
         }
         
-        m_wave_shots_left = 10;
+        
+        
 
-        if (m_wave <= m_wave_max)
+        //if last wave and no more speedy rounds
+        if (m_wave <= m_wave_max || speedy_round == true )
         {
+
+            //prepare vars
             m_wave_shots_left = m_cannons[0].m_cannon_settings[m_wave - 1].m_max_shots;
             m_cannon_center.Set_Next_Wave_Stats(m_wave - 1);
             m_cannon_left.Set_Next_Wave_Stats(m_wave - 1);
             m_cannon_right.Set_Next_Wave_Stats(m_wave - 1);
             m_ui_world.Show_Giant_Text(giant_text_message, 5, "next wave start");
-            //m_ui_world.Show_Giant_Text("", 5, "giant text finish - cannon");
+
         } else
         {
             m_ui_world.Show_Giant_Text("Game Over", 5, "giant text finish - cannon");
@@ -310,8 +347,9 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
         while (true)
         {
             //select cannon
-            //m_selected_cannon = m_cannons[Random.Range(0, 3)];
-            m_selected_cannon = m_cannons[0];
+            //m_selected_cannon = m_cannons[0];
+            m_selected_cannon = m_cannons[Random.Range(0, 3)];
+            
             m_selected_cannon.Shoot_prepare();
             yield return new WaitForSeconds(0.4f);
 
@@ -359,10 +397,12 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
                 m_cannons[0].m_cannon_settings[i].m_speedy = true;
             }
         }
-        
+        m_cannons[0].m_cannon_settings[4].m_hot = (script_cannon_settings.hot)Random.Range(1, 4);
+        m_cannons[0].m_cannon_settings[4].m_speedy = true;
+
 
         //synchronize cannon settings to the center cannon preset
-        for(int y = 0; y < m_cannons[0].m_cannon_settings.Length; y++)
+        for (int y = 0; y < m_cannons[0].m_cannon_settings.Length; y++)
         {
             for (int i = 1; i <= 2; i++)
             {

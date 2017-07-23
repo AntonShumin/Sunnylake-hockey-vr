@@ -81,10 +81,6 @@ public class script_manager_ui_world : MonoBehaviour {
         m_last_event = event_name;
         switch(event_name)
         {
-            case ("cannon"):
-
-                Show_Giant_Text("warm up", 2, "cannon fire"); //original 10
-                break;
             case ("cannon fire"):
                 Reset_scores();
                 m_count_positive.SetActive(true);
