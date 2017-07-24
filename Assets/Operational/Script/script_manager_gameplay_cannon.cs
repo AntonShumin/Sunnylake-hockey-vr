@@ -36,6 +36,7 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
     private int m_stats_best;
     private int m_stats_record;
     private int m_stats_world;
+    private bool m_speedy_round;
 
     //other
     private script_cannon m_selected_cannon;
@@ -43,6 +44,9 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
 
     //cached
     private string[] score_array = new string[9];
+    private script_cannon c_selected_cannon;
+    private script_cannon[] c_cannon_selection_pool = new script_cannon[2];
+    private int c_index;
     
 
 
@@ -163,12 +167,13 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
         }
     }
 
-
+    /****************************************
+     *********** Next Wave Setup ************ 
+     ***************************************/
     private void SetupNextWave()
     {
         //preset vars
         string giant_text_message = "";
-        bool speedy_round = false;
 
         //check for speed round
         if(m_wave == 0)
@@ -186,7 +191,7 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
             if (m_cannons[0].m_cannon_settings[m_wave - 1].m_speedy)
             {
                 //set vars
-                speedy_round = true;
+                m_speedy_round = true;
                 m_cannons[0].m_cannon_settings[m_wave - 1].m_speedy = false;
 
                 //the very last wave
@@ -209,6 +214,7 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
             {
 
                 //set vars
+                m_speedy_round = false;
                 m_wave++;
                 giant_text_message = "Speed up" + (m_wave - 1).ToString();
 
@@ -224,10 +230,8 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
         }
         
         
-        
-
         //if last wave and no more speedy rounds
-        if (m_wave <= m_wave_max || speedy_round == true )
+        if (m_wave <= m_wave_max || m_speedy_round == true )
         {
 
             //prepare vars
@@ -242,6 +246,8 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
             m_ui_world.Show_Giant_Text("Game Over", 5, "giant text finish - cannon");
         }
     }
+
+    /* ---------------- End next wave setup ------------------ */
 
     public void Collider_Event(script_puck script, string type)
     {
@@ -348,7 +354,7 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
         {
             //select cannon
             //m_selected_cannon = m_cannons[0];
-            m_selected_cannon = m_cannons[Random.Range(0, 3)];
+            m_selected_cannon = select_cannon();
             
             m_selected_cannon.Shoot_prepare();
             yield return new WaitForSeconds(0.4f);
@@ -375,6 +381,34 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
 
 
         }
+    }
+
+    private script_cannon select_cannon()
+    {
+
+        if ( m_speedy_round)
+        {
+            c_index = 0;
+            foreach (script_cannon cannon in m_cannons)
+            {
+                if (cannon != m_selected_cannon)
+                {
+                    c_cannon_selection_pool[c_index] = cannon;
+                    c_index++;
+                    if (c_index == 2) break;
+                }
+            }
+
+            c_selected_cannon = c_cannon_selection_pool[Random.Range(0, c_cannon_selection_pool.Length)];
+
+        } else
+        {
+            c_selected_cannon = m_cannons[Random.Range(0, 3)];
+        }
+
+        return c_selected_cannon;
+
+        
     }
 
     private void Setup_Cannon_Vars()
