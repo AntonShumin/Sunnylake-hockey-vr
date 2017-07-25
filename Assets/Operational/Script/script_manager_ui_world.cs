@@ -81,11 +81,10 @@ public class script_manager_ui_world : MonoBehaviour {
         m_last_event = event_name;
         switch(event_name)
         {
-            case ("cannon fire"):
+            case ("reset cannon scores"):
                 Reset_scores();
                 m_count_positive.SetActive(true);
                 m_count_negative.SetActive(true);
-                m_manager_gameplay_cannon.Game_Event(event_name);
                 break;
             case ("replay cannon"):
                 Hide_Summary();
@@ -168,12 +167,14 @@ public class script_manager_ui_world : MonoBehaviour {
 
     public void Count_Save(int score)
     {
-        m_count_positive.GetComponent<TextMeshProUGUI>().text = score.ToString();
+        m_sound_source.PlayOneShot(m_sounds[6]);
+        m_count_positive.GetComponent<TextMeshProUGUI>().DOText(score.ToString(), 0.8f, true, ScrambleMode.All);
     }
 
     public void Count_Score(int score)
     {
-        m_count_negative.GetComponent<TextMeshProUGUI>().text = score.ToString();
+        m_sound_source.PlayOneShot(m_sounds[7]);
+        m_count_negative.GetComponent<TextMeshProUGUI>().DOText(score.ToString(),0.8f,true,ScrambleMode.All);
     }
 
     public void Show_Summary(string type, string[] score_array)

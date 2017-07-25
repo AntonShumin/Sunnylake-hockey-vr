@@ -16,7 +16,7 @@ public class script_cannon_settings {
     public float m_height_top;
     public float m_heigh_bottom;
     public float m_width_max;
-    [System.NonSerialized] public float m_width_min;
+    public float m_width_min;
     public  int m_max_shots;
     public  bool m_speedy = false;
     public  hot m_hot;

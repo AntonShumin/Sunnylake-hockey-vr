@@ -15,7 +15,7 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
     private script_cannon[] m_cannons = new script_cannon[3];
 
     //puck management
-    public float m_shoot_frequency; //1.4
+    private float m_shoot_frequency; //1.4
     public GameObject m_puck_prefab;
     private Rigidbody[] m_pucks = new Rigidbody[5];
     private int m_current_puck = 0;
@@ -61,7 +61,6 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
         m_cannons[1] = m_cannon_left;
         m_cannons[2] = m_cannon_right;
         shoot_coroutine = Shoot_Puck();
-        Setup_Cannon_Vars();
     }
 
     private void Setup_Summary_Vars()
@@ -109,9 +108,9 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
         switch(event_name)
         {
             case ("cannon"):
+                Setup_Cannon_Vars();
                 Game_Event("setup summary");
                 Game_Event("next wave");
-                //Game_Event("next wave start");
                 m_game_state = GameState.Active;
                 break;
             case ("cannon fire"):
@@ -122,6 +121,7 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
                 Count_Shots();
                 break;
             case ("setup summary"):
+                m_ui_world.Game_Events("reset cannon scores");
                 Setup_Summary_Vars();
                 break;
             case ("build summary"):
@@ -197,7 +197,7 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
                 //the very last wave
                 if (m_wave == m_cannons[0].m_cannon_settings.Length) 
                 {
-                    giant_text_message = "Final stand!";
+                    giant_text_message = "Final stand";
                     giant_text_message += " Hot " + m_cannons[0].m_cannon_settings[m_wave - 1].m_hot.ToString();
                     script_puck.set_hot(m_cannons[0].m_cannon_settings[m_wave - 1].m_hot);
                 }
@@ -216,14 +216,19 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
                 //set vars
                 m_speedy_round = false;
                 m_wave++;
-                giant_text_message = "Speed up" + (m_wave - 1).ToString();
+                giant_text_message = "Speed up " + (m_wave - 1).ToString();
 
-                //hot is set, not last wave
-                if (m_cannons[0].m_cannon_settings[m_wave - 1].m_hot != script_cannon_settings.hot.none && m_wave != m_cannons[0].m_cannon_settings.Length - 1)
+                //not last wave
+                if (m_wave < m_cannons[0].m_cannon_settings.Length - 1)
                 {
-                    giant_text_message += " Hot " + m_cannons[0].m_cannon_settings[m_wave - 1].m_hot.ToString();
-                    script_puck.set_hot(m_cannons[0].m_cannon_settings[m_wave - 1].m_hot);
+                    //HOT is set
+                    if (m_cannons[0].m_cannon_settings[m_wave - 1].m_hot != script_cannon_settings.hot.none)
+                    {
+                        giant_text_message += " Hot " + m_cannons[0].m_cannon_settings[m_wave - 1].m_hot.ToString();
+                        script_puck.set_hot(m_cannons[0].m_cannon_settings[m_wave - 1].m_hot);
+                    }
                 }
+                
 
 
             }
@@ -240,6 +245,14 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
             m_cannon_left.Set_Next_Wave_Stats(m_wave - 1);
             m_cannon_right.Set_Next_Wave_Stats(m_wave - 1);
             m_ui_world.Show_Giant_Text(giant_text_message, 5, "next wave start");
+            m_shoot_frequency = 1.4f;
+
+            //speedy bodys
+            if (m_speedy_round)
+            {
+                //m_wave_shots_left *= 2;
+                m_shoot_frequency = 0.4f;
+            }
 
         } else
         {
@@ -294,7 +307,7 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
         if ( ES2.Exists("cannon_total_saves") )
         {
             m_stats_saves_total += ES2.Load<int>("cannon_total_saves");
-            Debug.Log("total is " + m_stats_saves_total);
+            //Debug.Log("total is " + m_stats_saves_total);
         }
         //record
         if (ES2.Exists("cannon_record"))
@@ -353,7 +366,7 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
         while (true)
         {
             //select cannon
-            //m_selected_cannon = m_cannons[0];
+            //m_selected_cannon = m_cannons[1];
             m_selected_cannon = select_cannon();
             
             m_selected_cannon.Shoot_prepare();
@@ -378,7 +391,6 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
 
             //delay
             yield return new WaitForSeconds(m_shoot_frequency);
-
 
         }
     }

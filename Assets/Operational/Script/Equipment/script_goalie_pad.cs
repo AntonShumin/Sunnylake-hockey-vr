@@ -134,7 +134,7 @@
         {
             
             c_pulse_strength = collision.relativeVelocity.magnitude;
-            Debug.Log("magnitude " + c_pulse_strength);
+            //Debug.Log("magnitude " + c_pulse_strength);
             if (c_pulse_strength > 10)
             {
                 m_script_controller.Vibrate_pulse(1f);
@@ -154,7 +154,7 @@
         {
             c_pulse_strength = collision.relativeVelocity.magnitude / 50;
             c_pulse_strength = Mathf.Clamp(c_pulse_strength, 0, 1f);
-            Debug.Log("colliding force is " + c_pulse_strength);
+            //Debug.Log("colliding force is " + c_pulse_strength);
             m_script_controller.Vibrate_pulse(0.1f);
         }
     }

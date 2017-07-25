@@ -82,8 +82,8 @@ public class script_cannon : MonoBehaviour {
 
         //move puck
 
-        //m_vector_shoot.x = Random.Range(m_width_min, m_width_max);
-        m_vector_shoot.x = Random.Range(m_width_max, -m_width_max);
+        m_vector_shoot.x = Random.Range(m_width_min, m_width_max);
+        //m_vector_shoot.x = Random.Range(m_width_max, -m_width_max);
         m_vector_shoot.y = Random.Range(m_height_bottom, m_height_top);
 
         /*
