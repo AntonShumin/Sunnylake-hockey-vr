@@ -295,6 +295,8 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
         m_score_negative++;
         m_stats_allowed++;
         m_ui_world.Count_Score(m_score_negative);
+        m_ui_world.Game_Events("particle goal");
+        script.Game_Events("score sound");
     }
 
     

@@ -1,12 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using ParticlePlayground;
 
 public class script_particles : MonoBehaviour {
 
+    //set vars
     private ParticleSystem m_text_hover;
     private ParticleSystem m_text_onetimer;
     private WaitForSeconds m_text_wait = new WaitForSeconds(0.5f);
+
+    //particle playground
+    private PlaygroundParticlesC m_goal;
+    private PlaygroundParticlesC m_block;
+    private PlaygroundParticlesC[] m_hots = new PlaygroundParticlesC[3];
 
     void Awake()
     {
@@ -16,13 +23,10 @@ public class script_particles : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+
+        m_goal = GameObject.Find("particles_goal").GetComponent<PlaygroundParticlesC>();
+
+    }
 
     public void Game_Event(string event_name)
     {
@@ -43,6 +47,9 @@ public class script_particles : MonoBehaviour {
                 break;
             case "onetimer":
                 m_text_onetimer.Play();
+                break;
+            case "goal":
+                m_goal.Emit(true);
                 break;
         }
     }

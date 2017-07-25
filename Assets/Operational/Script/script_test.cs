@@ -5,11 +5,13 @@ using ParticlePlayground;
 
 public class script_test : MonoBehaviour {
 
-    private PlaygroundParticlesC m_particles_block_special;
+    private PlaygroundParticlesC m_particles;
+    private PlaygroundParticlesC m_particle_drip;
 
     // Use this for initialization
     void Start () {
-        m_particles_block_special = GameObject.Find("particles_block_special").GetComponent<PlaygroundParticlesC>();
+        m_particles = GameObject.Find("particles_goal").GetComponent<PlaygroundParticlesC>();
+        m_particle_drip = GameObject.Find("equipment_highlight").GetComponent<PlaygroundParticlesC>();
     }
 
     // Update is called once per frame
@@ -18,7 +20,7 @@ public class script_test : MonoBehaviour {
         if(Input.GetKeyDown("space"))
         {
             Debug.Log("space");
-            m_particles_block_special.Emit(transform.position);
+            m_particles.Emit(true);
         }
 		
 	}

@@ -114,6 +114,9 @@ public class script_manager_ui_world : MonoBehaviour {
             case ("button press"):
                 m_sound_source.PlayOneShot(m_sounds[5]);
                 break;
+            case ("particle goal"):
+                m_particles.Game_Event("goal");
+                break;
         }
         
     }
