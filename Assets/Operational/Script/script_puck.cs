@@ -9,7 +9,7 @@ public class script_puck : MonoBehaviour {
     public AudioClip[] m_sounds;
 
     //static
-    private static script_cannon_settings.hot m_hot;
+    private script_cannon_settings.hot m_hot;
 
     //private
     private float m_time_idle = 0f;
@@ -61,7 +61,7 @@ public class script_puck : MonoBehaviour {
         }
     }
 
-    public static void set_hot(script_cannon_settings.hot hot)
+    public void set_hot(script_cannon_settings.hot hot)
     {
         m_hot = hot;
     }

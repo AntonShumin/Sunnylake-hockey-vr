@@ -51,7 +51,7 @@
             Vibrate(impact_velocity, 0.1f);
 
             //particles
-            Puck_Contact(collision, script_cannon_settings.hot.none);
+            Puck_Contact(collision, m_hot_object);
 
             
         }
@@ -74,24 +74,25 @@
                     if (c_puck.get_hot() == blocking_object && blocking_object != script_cannon_settings.hot.none)
                     {
 
+                        //haptic
                         Vibrate(1, 0.3f);
-
-                        //not hot collision but strong enough
-                    }
-                    else if (collision.relativeVelocity.magnitude > 10f)
-                    {
-
-                        //special
+                        
+                        //particles
                         m_particles_block_special.transform.position = m_position_impact;
                         m_particles_block_special.transform.LookAt(m_position_impact_target);
                         m_particles_block_special.Emit(true);
+
+                        
+                    }
+                    //not hot collision but strong enough
+                    else if (collision.relativeVelocity.magnitude > 10f)
+                    {
 
                         //standard particles
                         m_particles_block.transform.position = m_position_impact;
                         m_particles_block.transform.LookAt(m_position_impact_target);
                         m_particles_block.Stop();
                         m_particles_block.Play();
-
 
                     }
                 }

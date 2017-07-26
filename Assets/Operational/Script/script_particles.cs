@@ -13,7 +13,7 @@ public class script_particles : MonoBehaviour {
     //particle playground
     private PlaygroundParticlesC m_goal;
     private PlaygroundParticlesC m_block;
-    private PlaygroundParticlesC[] m_hots = new PlaygroundParticlesC[3];
+    private PlaygroundParticlesC[] m_hots = new PlaygroundParticlesC[4];
 
     void Awake()
     {
@@ -25,6 +25,9 @@ public class script_particles : MonoBehaviour {
 	void Start () {
 
         m_goal = GameObject.Find("particles_goal").GetComponent<PlaygroundParticlesC>();
+        m_hots[1] = GameObject.Find("highlight_stick").GetComponent<PlaygroundParticlesC>();
+        m_hots[2] = GameObject.Find("highlight_pad").GetComponent<PlaygroundParticlesC>();
+        m_hots[3] = GameObject.Find("highlight_glove").GetComponent<PlaygroundParticlesC>();
 
     }
 
@@ -35,7 +38,6 @@ public class script_particles : MonoBehaviour {
             case "hover start":
                 StartCoroutine( Text_Wait() );
                 break;
-
             case "hover play":
                 m_text_hover.Play();
                 m_text_hover.GetComponent<AudioSource>().Play();
@@ -51,7 +53,13 @@ public class script_particles : MonoBehaviour {
             case "goal":
                 m_goal.Emit(true);
                 break;
+
         }
+    }
+
+    public void Hot_highlight(int index, bool onoff)
+    {
+        m_hots[index].Emit(onoff);
     }
 
     IEnumerator Text_Wait()
