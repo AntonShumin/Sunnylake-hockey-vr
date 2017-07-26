@@ -66,6 +66,11 @@ public class script_puck : MonoBehaviour {
         m_hot = hot;
     }
 
+    public script_cannon_settings.hot get_hot()
+    {
+        return m_hot;
+    }
+
 
 
 

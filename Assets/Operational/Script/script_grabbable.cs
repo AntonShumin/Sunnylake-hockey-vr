@@ -11,11 +11,13 @@
         private GameObject grabbingController;
         private ParticleSystem m_particles_block;
         private PlaygroundParticlesC m_particles_block_special;
+        public script_cannon_settings.hot m_hot_object;
 
         //cashed 
         private float impact_velocity;
         private Vector3 m_position_impact;
         private Vector3 m_position_impact_target;
+        private script_puck c_puck;
 
         void Start()
         {
@@ -46,29 +48,58 @@
             impact_velocity = Mathf.Max(0.05f,impact_velocity);
 
             //vibrate
-            //Debug.Log("haptic strength " + impact_velocity);
             Vibrate(impact_velocity, 0.1f);
 
             //particles
-            m_position_impact_target = collision.gameObject.transform.position; //target position
-            m_position_impact = collision.contacts[0].point;
-            if (m_position_impact != null && m_particles_block != null && impact_velocity > 0.5f)
-            {
-                m_particles_block.transform.position = m_position_impact;
-                m_particles_block.transform.LookAt(m_position_impact_target);
-                m_particles_block.Stop();
-                m_particles_block.Play();
+            Puck_Contact(collision, script_cannon_settings.hot.none);
 
-                //special
-                m_particles_block_special.transform.position = m_position_impact;
-                m_particles_block_special.transform.LookAt(m_position_impact_target);
-                m_particles_block_special.Emit();
-            }
-            
-
-            
             
         }
+
+        public void Puck_Contact(Collision collision, script_cannon_settings.hot blocking_object)
+        {
+            c_puck = collision.gameObject.GetComponent<script_puck>();
+            //colliding object is a puck
+            if ( c_puck != null )
+            {
+
+                //set vars
+                m_position_impact_target = collision.gameObject.transform.position; //target position
+                m_position_impact = collision.contacts[0].point;
+
+                //if colision points are valid
+                if (m_position_impact != null && m_particles_block != null)
+                {
+                    //hot collision
+                    if (c_puck.get_hot() == blocking_object && blocking_object != script_cannon_settings.hot.none)
+                    {
+
+                        Vibrate(1, 0.3f);
+
+                        //not hot collision but strong enough
+                    }
+                    else if (collision.relativeVelocity.magnitude > 10f)
+                    {
+
+                        //special
+                        m_particles_block_special.transform.position = m_position_impact;
+                        m_particles_block_special.transform.LookAt(m_position_impact_target);
+                        m_particles_block_special.Emit(true);
+
+                        //standard particles
+                        m_particles_block.transform.position = m_position_impact;
+                        m_particles_block.transform.LookAt(m_position_impact_target);
+                        m_particles_block.Stop();
+                        m_particles_block.Play();
+
+
+                    }
+                }
+                   
+            }
+        }
+
+
 
         public void Vibrate(float strength, float duration)
         {
