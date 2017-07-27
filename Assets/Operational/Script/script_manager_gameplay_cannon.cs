@@ -13,6 +13,8 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
     private script_cannon m_cannon_left;
     private script_cannon m_cannon_right;
     private script_cannon[] m_cannons = new script_cannon[3];
+    private script_particles m_manager_particles;
+    private script_manager_audio m_manager_audio;
 
     //puck management
     private float m_shoot_frequency; //1.4
@@ -61,6 +63,7 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
         m_cannons[1] = m_cannon_left;
         m_cannons[2] = m_cannon_right;
         shoot_coroutine = Shoot_Puck();
+        m_manager_audio = GetComponent<script_manager_audio>();
     }
 
     private void Setup_Summary_Vars()
@@ -93,6 +96,8 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
         }
         
         m_goal_collider_exit = GameObject.Find("Collider Exit").GetComponent<Collider>();
+        m_manager_particles = GameObject.Find("Particles_UI").GetComponent<script_particles>();
+        
     }
 
     void Update()
@@ -152,8 +157,23 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
 
     IEnumerator Sequence_End_Round()
     {
+
+        //stop shooting pucks
         Game_Event("stop cannon");
+
+        //pause
         yield return new WaitForSeconds(2f);
+        
+
+        //hot highlight
+        if (m_cannons[0].m_cannon_settings[m_wave - 1].m_hot != script_cannon_settings.hot.none)
+        {
+
+            m_manager_particles.Hot_highlight((int)m_cannons[0].m_cannon_settings[m_wave - 1].m_hot, false);
+            script_puck.m_hot = script_cannon_settings.hot.none;
+        }
+
+        //load next wave
         Game_Event("next wave");
     }
 
@@ -199,7 +219,10 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
                 {
                     giant_text_message = "Final stand";
                     giant_text_message += " Hot " + m_cannons[0].m_cannon_settings[m_wave - 1].m_hot.ToString();
-                    script_puck.set_hot(m_cannons[0].m_cannon_settings[m_wave - 1].m_hot);
+                    //******hot******//
+                    script_puck.m_hot = m_cannons[0].m_cannon_settings[m_wave - 1].m_hot;
+                    m_manager_particles.Hot_highlight( (int)m_cannons[0].m_cannon_settings[m_wave - 1].m_hot, true);
+                    //-----hot-----//
                 }
                 //not last wave
                 else
@@ -225,7 +248,9 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
                     if (m_cannons[0].m_cannon_settings[m_wave - 1].m_hot != script_cannon_settings.hot.none)
                     {
                         giant_text_message += " Hot " + m_cannons[0].m_cannon_settings[m_wave - 1].m_hot.ToString();
-                        script_puck.set_hot(m_cannons[0].m_cannon_settings[m_wave - 1].m_hot);
+                        script_puck.m_hot = m_cannons[0].m_cannon_settings[m_wave - 1].m_hot;
+                        m_manager_particles.Hot_highlight((int)m_cannons[0].m_cannon_settings[m_wave - 1].m_hot, true);
+
                     }
                 }
                 

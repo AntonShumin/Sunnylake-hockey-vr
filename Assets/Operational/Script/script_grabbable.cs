@@ -12,17 +12,20 @@
         private ParticleSystem m_particles_block;
         private PlaygroundParticlesC m_particles_block_special;
         public script_cannon_settings.hot m_hot_object;
+        public AudioSource m_Audio_source;
 
         //cashed 
         private float impact_velocity;
         private Vector3 m_position_impact;
         private Vector3 m_position_impact_target;
         private script_puck c_puck;
+        
 
         void Start()
         {
             m_particles_block = GameObject.Find("particles_block").GetComponent<ParticleSystem>();
             m_particles_block_special = GameObject.Find("particles_block_special").GetComponent<PlaygroundParticlesC>();
+            m_Audio_source = GetComponent<AudioSource>();
         }
 
         public override void Grabbed(GameObject grabbingObject)
@@ -71,7 +74,7 @@
                 if (m_position_impact != null && m_particles_block != null)
                 {
                     //hot collision
-                    if (c_puck.get_hot() == blocking_object && blocking_object != script_cannon_settings.hot.none)
+                    if (script_puck.m_hot == blocking_object && blocking_object != script_cannon_settings.hot.none)
                     {
 
                         //haptic
