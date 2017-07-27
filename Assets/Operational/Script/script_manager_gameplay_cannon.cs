@@ -218,7 +218,7 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
                 if (m_wave == m_cannons[0].m_cannon_settings.Length) 
                 {
                     giant_text_message = "Final stand";
-                    giant_text_message += " Hot " + m_cannons[0].m_cannon_settings[m_wave - 1].m_hot.ToString();
+                    giant_text_message += "\n<size=150><color=#FF8949FF>Hot " + m_cannons[0].m_cannon_settings[m_wave - 1].m_hot.ToString() + "</color></size>";
                     //******hot******//
                     script_puck.m_hot = m_cannons[0].m_cannon_settings[m_wave - 1].m_hot;
                     m_manager_particles.Hot_highlight( (int)m_cannons[0].m_cannon_settings[m_wave - 1].m_hot, true);
@@ -247,15 +247,14 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
                     //HOT is set
                     if (m_cannons[0].m_cannon_settings[m_wave - 1].m_hot != script_cannon_settings.hot.none)
                     {
-                        giant_text_message += " Hot " + m_cannons[0].m_cannon_settings[m_wave - 1].m_hot.ToString();
+
+                        giant_text_message += "\n<size=150><color=#FF8949FF>Hot " + m_cannons[0].m_cannon_settings[m_wave - 1].m_hot.ToString() + "</color></size>";
                         script_puck.m_hot = m_cannons[0].m_cannon_settings[m_wave - 1].m_hot;
                         m_manager_particles.Hot_highlight((int)m_cannons[0].m_cannon_settings[m_wave - 1].m_hot, true);
 
                     }
                 }
                 
-
-
             }
         }
         
