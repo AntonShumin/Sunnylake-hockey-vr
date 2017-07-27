@@ -83,7 +83,7 @@ public class script_particles : MonoBehaviour
         {
             m_manager_audio.Play_loop(m_hots_audioSource[index], 0);
             m_manager_audio.Play_oneshot(m_hots_audioSource[index], 2);
-            m_hots_grabbable[index].Vibrate(1f, 2f);
+            m_hots_grabbable[index].Vibrate(1f, 3f);
         } else
         {
             m_hots_audioSource[index].Stop();

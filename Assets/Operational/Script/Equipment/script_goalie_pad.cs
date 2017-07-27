@@ -133,12 +133,9 @@
         public void OnCollisionEnter(Collision collision)
         {
             
-            c_pulse_strength = collision.relativeVelocity.magnitude;
-            //Debug.Log("magnitude " + c_pulse_strength);
-            if (c_pulse_strength > 10)
+            if (collision.relativeVelocity.magnitude > 10)
             {
-                m_script_controller.Vibrate_pulse(1f);
-                //m_script_controller.Vibrate(Mathf.Clamp(c_pulse_strength / 20, 0.1f, 1), 0.3f);
+                m_script_controller.Puck_Contact(collision,script_cannon_settings.hot.stick);
             } else
             {
                 Pulse(collision);

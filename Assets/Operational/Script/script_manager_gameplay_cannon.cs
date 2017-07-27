@@ -310,6 +310,7 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
         script.m_cannon_fired = false;
         m_score_positive++;
         m_stats_saves++;
+        if (script.m_hot_touched) m_score_positive++;
         m_ui_world.Count_Save(m_score_positive);
 
     }
@@ -320,8 +321,11 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
         m_score_negative++;
         m_stats_allowed++;
         m_ui_world.Count_Score(m_score_negative);
-        m_ui_world.Game_Events("particle goal");
-        script.Game_Events("score sound");
+        if(m_speedy_round == false)
+        {
+            m_ui_world.Game_Events("particle goal");
+            script.Game_Events("score sound");
+        }
     }
 
     

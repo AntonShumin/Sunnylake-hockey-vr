@@ -7,6 +7,7 @@ public class script_puck : MonoBehaviour {
     //public
     public bool m_cannon_fired = false;
     public AudioClip[] m_sounds;
+    public bool m_hot_touched;
 
     //static
     public static script_cannon_settings.hot m_hot;

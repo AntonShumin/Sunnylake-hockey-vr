@@ -91,8 +91,10 @@ public class script_cannon : MonoBehaviour {
         m_vector_shoot.y = m_height_top;
         */
 
+        
         puck.transform.position = m_puck_spowner_position;
         puck.transform.rotation = m_puck_rotation;
+        puck.GetComponent<script_puck>().m_hot_touched = false;
         puck.GetComponent<script_puck>().m_cannon_fired = true;
         puck.velocity = m_vector_shoot * m_shoot_strength;
     }
