@@ -343,6 +343,13 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
         if (ES2.Exists("cannon_record"))
         {
             m_stats_record = Mathf.Max(m_score_positive, ES2.Load<int>("cannon_record"));
+
+            //record fireworks and tween
+            if ( m_score_positive > ES2.Load<int>("cannon_record") )
+            {
+                m_ui_world.Game_Events("summary record");
+            }
+
         } else
         {
             m_stats_record = m_score_positive;

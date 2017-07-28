@@ -72,6 +72,12 @@ public class script_particles : MonoBehaviour
             case "goal":
                 m_goal.Emit(true);
                 break;
+            case "summary record":
+                //include particles
+                break;
+            case "summary record stop":
+                //stop particles
+                break;
 
         }
     }
