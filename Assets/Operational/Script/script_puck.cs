@@ -6,6 +6,7 @@ public class script_puck : MonoBehaviour {
 
     //public
     public bool m_cannon_fired = false;
+    public bool m_glove_touched = true; //used to brake speed on glove touch in script_grabbalble
     public AudioClip[] m_sounds;
     public bool m_hot_touched;
 

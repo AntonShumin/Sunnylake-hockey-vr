@@ -8,7 +8,13 @@ public class script_glove_brake : MonoBehaviour {
     {
         if (collider.GetComponent<script_puck>())
         {
-            collider.GetComponent<Rigidbody>().velocity = Vector3.zero;
+            Debug.Log(collider.GetComponent<Rigidbody>().velocity.magnitude);
+            if (collider.GetComponent<Rigidbody>().velocity.magnitude > 10)
+            {
+                collider.GetComponent<Rigidbody>().velocity /= 10;
+                Debug.Log(collider.GetComponent<Rigidbody>().velocity);
+            }
+            
         }
     }
 }

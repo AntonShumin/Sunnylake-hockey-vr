@@ -19,12 +19,14 @@
         private Vector3 m_position_impact;
         private Vector3 m_position_impact_target;
         private script_puck c_puck;
+        private script_manager_audio m_manager_audio;
         
 
         void Start()
         {
             m_particles_block = GameObject.Find("particles_block").GetComponent<ParticleSystem>();
             m_particles_block_special = GameObject.Find("particles_block_special").GetComponent<PlaygroundParticlesC>();
+            m_manager_audio = GameObject.Find("Manager_Gameplay").GetComponent<script_manager_audio>();
             m_Audio_source = GetComponent<AudioSource>();
         }
 
@@ -56,6 +58,21 @@
             //particles
             Puck_Contact(collision, m_hot_object);
 
+            //glove stop
+            if ( m_hot_object == script_cannon_settings.hot.glove )
+            {
+                if(collision.gameObject.GetComponent<script_puck>() != false)
+                {
+                    //stop the puck if velocity > 5 or the puck is marked as cannon_fired
+                    if(collision.gameObject.GetComponent<script_puck>().m_glove_touched == false)
+                    {
+                        collision.gameObject.GetComponent<Rigidbody>().velocity /= 10;
+                        collision.gameObject.GetComponent<script_puck>().m_glove_touched = true;
+                    }
+                    
+                }
+            }
+
             
         }
 
@@ -77,8 +94,8 @@
                     if (script_puck.m_hot == blocking_object && blocking_object != script_cannon_settings.hot.none)
                     {
 
-                        //first collider
-                        if(c_puck.m_hot_touched == false)
+                        //first collider and is an active fired puck
+                        if(c_puck.m_hot_touched == false && c_puck.m_cannon_fired == true)
                         {
                             //haptic
                             Vibrate(1, 0.5f);
@@ -88,6 +105,9 @@
                             m_particles_block_special.transform.LookAt(m_position_impact_target);
                             m_particles_block_special.Emit(true);
                             c_puck.m_hot_touched = true;
+
+                            //sound
+                            m_manager_audio.Play_oneshot( m_Audio_source, Random.Range(3,5) );
                         }
 
                     }

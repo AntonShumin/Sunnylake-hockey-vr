@@ -28,7 +28,7 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
     private int m_score_negative;
     public int m_wave;
     public int m_wave_shots_left;
-    private int m_wave_max = 5; //current max 4
+    private int m_wave_max = 5; //current max 5
 
     private int m_stats_saves;
     private int m_stats_allowed;
@@ -377,6 +377,7 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
         score_array[6] = "World: TOP <color=#5ACFFFFF> " + m_stats_best + "</color>"; // best round points
         score_array[7] = "Record: " + m_stats_record; // 7 days record
         //score_array[8] = "World position: " + m_stats_world; // word position
+        Debug.Log(score_array);
 
         m_ui_world.Show_Summary("cannon", score_array);
         /*

@@ -55,7 +55,8 @@ public class script_manager_ui_world : MonoBehaviour {
         m_summary_scores[6] = GameObject.Find("sum_position");
         m_summary_scores[7] = GameObject.Find("sum_record");
         //m_summary_scores[8] = GameObject.Find("sum_position");
-        m_summary_record = GameObject.Find("sum_record");
+        m_summary_record = GameObject.Find("sum_popup_record");
+        m_summary_record.SetActive(false);
 
         //UI Main
         m_ui_main = GameObject.Find("User Interface");
