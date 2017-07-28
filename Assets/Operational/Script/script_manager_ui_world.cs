@@ -28,6 +28,7 @@ public class script_manager_ui_world : MonoBehaviour {
     private GameObject m_summary;
     private GameObject[] m_summary_scores;
     private GameObject m_summary_record;
+    private GameObject[] m_goalie_equipment = new GameObject[7];
 
     //cached 
     private Vector3 c_position;
@@ -62,6 +63,8 @@ public class script_manager_ui_world : MonoBehaviour {
         m_ui_main = GameObject.Find("User Interface");
         m_camera_rig = GameObject.Find("[CameraRig]").gameObject;
         m_camera_rig_ui_offset = m_ui_main.transform.position - m_camera_rig.transform.position;
+
+        
     }
 
 	// Use this for initialization
@@ -71,11 +74,30 @@ public class script_manager_ui_world : MonoBehaviour {
         m_big_title.SetActive(false);
         m_countdown.SetActive(false);
         m_summary.SetActive(false);
+
+        //goalie equipment
+        m_goalie_equipment[0] = GameObject.Find("model_glove");
+        m_goalie_equipment[1] = GameObject.Find("model_glove/Colliders");
+        m_goalie_equipment[2] = GameObject.Find("model_goalie_stick_v1");
+        m_goalie_equipment[3] = GameObject.Find("model_goalie_stick_v1/collider2");
+        m_goalie_equipment[4] = GameObject.Find("model_pad/glove");
+        m_goalie_equipment[5] = GameObject.Find("model_pad/IGH_glove_DX");
+        m_goalie_equipment[6] = GameObject.Find("model_pad/pad_collider");
         
+        //m_goalie_equipment[0].GetComponent<Renderer>().material.SetColor("_Diffusecolor",new Color("#4B97FFFF") );
+        m_goalie_equipment[0].GetComponent<Renderer>().material.SetFloat("_Transparency", 0.5f);
+        m_goalie_equipment[1].SetActive(false);
+        m_goalie_equipment[2].GetComponent<Renderer>().material.SetFloat("_Transparency", 0.5f);
+        m_goalie_equipment[3].SetActive(false);
+        m_goalie_equipment[4].GetComponent<Renderer>().material.SetFloat("_Transparency", 0.5f);
+        m_goalie_equipment[5].GetComponent<Renderer>().material.SetFloat("_Transparency", 0.5f);
+        m_goalie_equipment[6].SetActive(false);
+
+
     }
-	
-	// Update is called once per frame
-	void Update () {
+
+    // Update is called once per frame
+    void Update () {
         if (m_timer_active) Timer_rundown();
 	}
 
@@ -252,6 +274,7 @@ public class script_manager_ui_world : MonoBehaviour {
         m_particles.Game_Event("summary record");
 
     }
+
 
    
 
