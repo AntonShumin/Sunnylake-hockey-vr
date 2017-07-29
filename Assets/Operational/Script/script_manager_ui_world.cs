@@ -18,6 +18,7 @@ public class script_manager_ui_world : MonoBehaviour {
     private AudioSource m_sound_source;
     private GameObject m_camera_rig;
     private Vector3 m_camera_rig_ui_offset;
+    private GameObject m_perfect_round;
 
     private string m_last_event = "";
     private string m_timer_event_string = "";
@@ -45,6 +46,7 @@ public class script_manager_ui_world : MonoBehaviour {
         m_manager_gameplay_cannon = GameObject.Find("Manager_Gameplay").GetComponent<script_manager_gameplay_cannon>();
         m_particles = GameObject.Find("Particles_UI").GetComponent<script_particles>();
         m_sound_source = GetComponent<AudioSource>();
+        m_perfect_round = transform.Find("Perfect_Round").gameObject;
         
 
         m_summary = GameObject.Find("Game Summary");
@@ -145,6 +147,10 @@ public class script_manager_ui_world : MonoBehaviour {
                 break;
             case ("summary record"):
                 Summary_Record();
+                break;
+            case ("end tween perfect round"):
+                m_perfect_round.GetComponent<DOTweenAnimation>().DORewind();
+                m_perfect_round.SetActive(false);
                 break;
         }
         
@@ -312,6 +318,17 @@ public class script_manager_ui_world : MonoBehaviour {
         }
     }
 
+    public void Play_UI_Sound(int index)
+    {
+        m_sound_source.PlayOneShot(m_sounds[index]);
+    }
+
+    private void Perfect_Round()
+    {
+        m_perfect_round.SetActive(true);
+        m_perfect_round.GetComponent<DOTweenAnimation>().DOPlayById("show");
+        Play_UI_Sound(8);
+    }
 
    
 
