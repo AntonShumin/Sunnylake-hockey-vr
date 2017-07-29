@@ -29,9 +29,11 @@ public class script_manager_ui_world : MonoBehaviour {
     private GameObject[] m_summary_scores;
     private GameObject m_summary_record;
     private GameObject[] m_goalie_equipment = new GameObject[7];
+    public GameObject[] m_laster_pointer = new GameObject[2];
 
     //cached 
     private Vector3 c_position;
+    private float c_float;
 
 
     void Awake()
@@ -83,15 +85,14 @@ public class script_manager_ui_world : MonoBehaviour {
         m_goalie_equipment[4] = GameObject.Find("model_pad/glove");
         m_goalie_equipment[5] = GameObject.Find("model_pad/IGH_glove_DX");
         m_goalie_equipment[6] = GameObject.Find("model_pad/pad_collider");
-        
-        //m_goalie_equipment[0].GetComponent<Renderer>().material.SetColor("_Diffusecolor",new Color("#4B97FFFF") );
-        m_goalie_equipment[0].GetComponent<Renderer>().material.SetFloat("_Transparency", 0.5f);
-        m_goalie_equipment[1].SetActive(false);
-        m_goalie_equipment[2].GetComponent<Renderer>().material.SetFloat("_Transparency", 0.5f);
-        m_goalie_equipment[3].SetActive(false);
-        m_goalie_equipment[4].GetComponent<Renderer>().material.SetFloat("_Transparency", 0.5f);
-        m_goalie_equipment[5].GetComponent<Renderer>().material.SetFloat("_Transparency", 0.5f);
-        m_goalie_equipment[6].SetActive(false);
+
+        //laser pointer
+        /*
+        m_laster_pointer[0] = GameObject.Find("ViveControllerLaserPointerLeft");
+        m_laster_pointer[1] = GameObject.Find("ViveControllerLaserPointerRight");
+        */
+        m_laster_pointer[0].SetActive(false);
+        m_laster_pointer[1].SetActive(false);
 
 
     }
@@ -116,8 +117,8 @@ public class script_manager_ui_world : MonoBehaviour {
                 m_manager_gameplay_cannon.Game_Event("cannon");
                 break;
             case ("home from summary"):
-                Show_main_ui();
                 Hide_Summary();
+                Show_main_ui();
                 break;
             case ("giant text finish - cannon"):
             case ("next wave start"):
@@ -230,6 +231,9 @@ public class script_manager_ui_world : MonoBehaviour {
         m_ui_main.transform.DOMove(c_position,0.6f).From().SetEase(Ease.OutExpo);
         m_sound_source.PlayOneShot(m_sounds[2]);
 
+        //equipment
+        Equipment_Enable(false);
+
 
     }
 
@@ -240,6 +244,8 @@ public class script_manager_ui_world : MonoBehaviour {
         m_ui_main.transform.DOMove(c_position, 0.6f).SetEase(Ease.InExpo).OnComplete(Hide_main_ui_complete);
         m_sound_source.PlayOneShot(m_sounds[3]);
 
+        //equipment
+        Equipment_Enable(true);
     }
 
     private void Hide_main_ui_complete()
@@ -253,6 +259,9 @@ public class script_manager_ui_world : MonoBehaviour {
         m_sound_source.PlayOneShot(m_sounds[2]);
         m_summary.SetActive(true);
         m_summary.GetComponent<DOTweenAnimation>().DOPlayById("show");
+
+        //equipment
+        Equipment_Enable(false);
     }
 
     public void Hide_Summary()
@@ -264,6 +273,9 @@ public class script_manager_ui_world : MonoBehaviour {
         m_summary_record.SetActive(false);
         m_particles.Game_Event("summary record stop");
 
+        //equipment
+        Equipment_Enable(true);
+
     }
 
     private void Summary_Record()
@@ -273,6 +285,31 @@ public class script_manager_ui_world : MonoBehaviour {
         m_summary_record.GetComponent<DOTweenAnimation>().DOPlayById("record start");
         m_particles.Game_Event("summary record");
 
+    }
+
+    private void Equipment_Enable(bool type)
+    {
+        if (type)
+        {
+            c_float = 0f;
+        } else
+        {
+            c_float = 0.5f;
+        }
+        //m_goalie_equipment[0].GetComponent<Renderer>().material.SetColor("_Diffusecolor",new Color("#4B97FFFF") );
+        m_goalie_equipment[0].GetComponent<Renderer>().material.SetFloat("_Transparency", c_float);
+        m_goalie_equipment[1].SetActive(type);
+        m_goalie_equipment[2].GetComponent<Renderer>().material.SetFloat("_Transparency", c_float);
+        m_goalie_equipment[3].SetActive(type);
+        m_goalie_equipment[4].GetComponent<Renderer>().material.SetFloat("_Transparency", c_float);
+        m_goalie_equipment[5].GetComponent<Renderer>().material.SetFloat("_Transparency", c_float);
+        m_goalie_equipment[6].SetActive(type);
+
+        //pointer
+        foreach (GameObject go in m_laster_pointer)
+        {
+            go.SetActive(!type);
+        }
     }
 
 
