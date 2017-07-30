@@ -152,6 +152,23 @@
             Vibrate(0.1f, 0.05f);
         }
 
+        public bool Object_is_Grabbed()
+        {
+
+            //Debug.Log("Go" + gameObject.name + " controller is " + grabbingController + " and isGrabbed is " + IsGrabbed());
+
+            //if(grabbingController != null && IsGrabbed())
+            if (IsGrabbed())
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+
+        }
+
 
 
 

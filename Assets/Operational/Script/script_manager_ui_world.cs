@@ -31,6 +31,8 @@ public class script_manager_ui_world : MonoBehaviour {
     private GameObject m_summary_record;
     private GameObject[] m_goalie_equipment = new GameObject[7];
     public GameObject[] m_laster_pointer = new GameObject[2];
+    private VRTK.script_grabbable[] m_goalie_equipment_grabbable = new VRTK.script_grabbable[2];
+    private bool m_goalie_equipment_grabbed = false;
 
     //cached 
     private Vector3 c_position;
@@ -87,6 +89,13 @@ public class script_manager_ui_world : MonoBehaviour {
         m_goalie_equipment[4] = GameObject.Find("model_pad/glove");
         m_goalie_equipment[5] = GameObject.Find("model_pad/IGH_glove_DX");
         m_goalie_equipment[6] = GameObject.Find("model_pad/pad_collider");
+
+        //goalie equipment grabbable
+        m_goalie_equipment_grabbable[0] = GameObject.Find("dummy_glove").GetComponent<VRTK.script_grabbable>();
+        m_goalie_equipment_grabbable[1] = GameObject.Find("Goalie_Pad_Hand").GetComponent<VRTK.script_grabbable>();
+        m_goalie_equipment_grabbable[0].InteractableObjectGrabbed += Equipment_Grab_Event;
+        m_goalie_equipment_grabbable[1].InteractableObjectGrabbed += Equipment_Grab_Event;
+
 
         //laser pointer
         /*
@@ -304,27 +313,42 @@ public class script_manager_ui_world : MonoBehaviour {
 
     private void Equipment_Enable(bool type)
     {
-        if (type)
-        {
-            c_float = 0f;
-        } else
-        {
-            c_float = 0.5f;
-        }
+
+        //set vars
+        m_goalie_equipment_grabbed = type;
+        c_float = type ? 0f : 0.5f;
+
         //m_goalie_equipment[0].GetComponent<Renderer>().material.SetColor("_Diffusecolor",new Color("#4B97FFFF") );
-        m_goalie_equipment[0].GetComponent<Renderer>().material.SetFloat("_Transparency", c_float);
-        m_goalie_equipment[1].SetActive(type);
-        m_goalie_equipment[2].GetComponent<Renderer>().material.SetFloat("_Transparency", c_float);
-        m_goalie_equipment[3].SetActive(type);
-        m_goalie_equipment[4].GetComponent<Renderer>().material.SetFloat("_Transparency", c_float);
-        m_goalie_equipment[5].GetComponent<Renderer>().material.SetFloat("_Transparency", c_float);
-        m_goalie_equipment[6].SetActive(type);
+
+        //if glove is grabbed
+        if( m_goalie_equipment_grabbable[0].Object_is_Grabbed() )
+        {
+            m_goalie_equipment[0].GetComponent<Renderer>().material.SetFloat("_Transparency", c_float);
+            m_goalie_equipment[1].SetActive(type);
+        }
+
+        //if pad is grabbed
+        if( m_goalie_equipment_grabbable[1].Object_is_Grabbed() )
+        {
+            m_goalie_equipment[2].GetComponent<Renderer>().material.SetFloat("_Transparency", c_float);
+            m_goalie_equipment[3].SetActive(type);
+            m_goalie_equipment[4].GetComponent<Renderer>().material.SetFloat("_Transparency", c_float);
+            m_goalie_equipment[5].GetComponent<Renderer>().material.SetFloat("_Transparency", c_float);
+            m_goalie_equipment[6].SetActive(type);
+        }
+        
+        
 
         //pointer
         foreach (GameObject go in m_laster_pointer)
         {
             go.SetActive(!type);
         }
+    }
+
+    private void Equipment_Grab_Event(object sender, VRTK.InteractableObjectEventArgs e)
+    {
+        Equipment_Enable(m_goalie_equipment_grabbed);
     }
 
     public void Play_UI_Sound(int index)

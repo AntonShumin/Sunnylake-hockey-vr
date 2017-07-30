@@ -28,7 +28,7 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
     private int m_score_negative;
     public int m_wave;
     public int m_wave_shots_left;
-    private int m_wave_max = 1; //current max 5
+    private int m_wave_max = 5; //current max 5
     private bool m_wave_missedShot = false;
 
     private int m_stats_saves;
