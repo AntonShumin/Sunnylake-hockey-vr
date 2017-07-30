@@ -151,9 +151,15 @@ public class script_manager_ui_world : MonoBehaviour {
             case ("perfect round"):
                 Perfect_Round();
                 break;
+            case ("show tween perfect round"):
+                m_perfect_round.GetComponent<DOTweenAnimation>().DOPlayById("hide");
+                Count_Save(m_manager_gameplay_cannon.m_score_positive);
+                m_particles.Game_Event("onetimer small");
+                break;
             case ("end tween perfect round"):
                 m_perfect_round.GetComponent<DOTweenAnimation>().DORewind();
                 m_perfect_round.SetActive(false);
+                m_manager_gameplay_cannon.Sequence_End_Round_Continue();
                 break;
         }
         
@@ -328,6 +334,7 @@ public class script_manager_ui_world : MonoBehaviour {
 
     private void Perfect_Round()
     {
+        Play_UI_Sound(Random.Range(9, 12));
         m_perfect_round.SetActive(true);
         m_perfect_round.GetComponent<DOTweenAnimation>().DOPlayById("show");
     }

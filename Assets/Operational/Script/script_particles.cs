@@ -10,6 +10,7 @@ public class script_particles : MonoBehaviour
     //set vars
     private ParticleSystem m_text_hover;
     private ParticleSystem m_text_onetimer;
+    private ParticleSystem m_text_onetimer_small;
     private WaitForSeconds m_text_wait = new WaitForSeconds(0.5f);
 
     //particle playground
@@ -24,6 +25,7 @@ public class script_particles : MonoBehaviour
     {
         m_text_hover = transform.FindChild("Text_Hover").GetComponent<ParticleSystem>();
         m_text_onetimer = transform.FindChild("Text_Onetimer").GetComponent<ParticleSystem>();
+        m_text_onetimer_small = transform.FindChild("Text_Onetimer_small").GetComponent<ParticleSystem>();
     }
 
     // Use this for initialization
@@ -68,6 +70,9 @@ public class script_particles : MonoBehaviour
                 break;
             case "onetimer":
                 m_text_onetimer.Play();
+                break;
+            case "onetimer small":
+                m_text_onetimer_small.Play();
                 break;
             case "goal":
                 m_goal.Emit(true);

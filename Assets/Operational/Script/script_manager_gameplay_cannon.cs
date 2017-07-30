@@ -24,11 +24,11 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
     private IEnumerator shoot_coroutine;
 
     //Scores
-    private int m_score_positive;
+    public int m_score_positive;
     private int m_score_negative;
     public int m_wave;
     public int m_wave_shots_left;
-    private int m_wave_max = 5; //current max 5
+    private int m_wave_max = 1; //current max 5
     private bool m_wave_missedShot = false;
 
     private int m_stats_saves;
@@ -169,10 +169,18 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
         if (m_wave_missedShot == false)
         {
             m_score_positive += m_cannons[0].m_cannon_settings[m_wave - 1].m_max_shots / 3;
-            m_ui_world.Count_Save(m_score_positive);
+            //m_ui_world.Count_Save(m_score_positive); //called in ui_world after tween
             m_ui_world.Game_Events("perfect round");
+        } else
+        {
+            Sequence_End_Round_Continue();
         }
 
+        
+    }
+
+    public void Sequence_End_Round_Continue()
+    {
         //hot highlight
         if (m_cannons[0].m_cannon_settings[m_wave - 1].m_hot != script_cannon_settings.hot.none)
         {
