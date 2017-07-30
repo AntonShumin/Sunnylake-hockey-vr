@@ -29,6 +29,7 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
     public int m_wave;
     public int m_wave_shots_left;
     private int m_wave_max = 5; //current max 5
+    private bool m_wave_missedShot = false;
 
     private int m_stats_saves;
     private int m_stats_allowed;
@@ -164,6 +165,13 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
         //pause
         yield return new WaitForSeconds(2f);
         
+        //perfect round
+        if (m_wave_missedShot == false)
+        {
+            m_score_positive += m_cannons[0].m_cannon_settings[m_wave - 1].m_max_shots / 3;
+            m_ui_world.Count_Save(m_score_positive);
+            m_ui_world.Game_Events("perfect round");
+        }
 
         //hot highlight
         if (m_cannons[0].m_cannon_settings[m_wave - 1].m_hot != script_cannon_settings.hot.none)
@@ -270,6 +278,7 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
             m_cannon_right.Set_Next_Wave_Stats(m_wave - 1);
             m_ui_world.Show_Giant_Text(giant_text_message, 5, "next wave start");
             m_shoot_frequency = 1.4f;
+            m_wave_missedShot = false;
 
             //speedy bodys
             if (m_speedy_round)
@@ -325,6 +334,7 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
             m_ui_world.Game_Events("particle goal");
             script.Game_Events("score sound");
         }
+        m_wave_missedShot = true;
     }
 
     

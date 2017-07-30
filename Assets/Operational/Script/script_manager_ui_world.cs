@@ -148,6 +148,9 @@ public class script_manager_ui_world : MonoBehaviour {
             case ("summary record"):
                 Summary_Record();
                 break;
+            case ("perfect round"):
+                Perfect_Round();
+                break;
             case ("end tween perfect round"):
                 m_perfect_round.GetComponent<DOTweenAnimation>().DORewind();
                 m_perfect_round.SetActive(false);
@@ -327,7 +330,6 @@ public class script_manager_ui_world : MonoBehaviour {
     {
         m_perfect_round.SetActive(true);
         m_perfect_round.GetComponent<DOTweenAnimation>().DOPlayById("show");
-        Play_UI_Sound(8);
     }
 
    
