@@ -9,9 +9,10 @@ public class script_manager_gameplay : MonoBehaviour {
     public enum GameTypes { None, Cannon };
     public GameTypes m_game_type;
     
-
     private script_manager_ui_world m_ui_world;
     private script_manager_gameplay_cannon m_manager_gameplay_cannon;
+
+    Dictionary<string, GameObject> m_challenges = new Dictionary<string, GameObject>();
 
     void Awake()
     {

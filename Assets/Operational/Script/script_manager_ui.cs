@@ -6,6 +6,9 @@ public class script_manager_ui : MonoBehaviour {
 
     private script_manager_gameplay m_manager_gameplay;
     private script_manager_ui_world m_manager_ui_world;
+    private script_memory_bank m_memory_bank;
+    private Dictionary<string, GameObject> m_challenges = new Dictionary<string, GameObject>();
+    private Dictionary<string, int> m_challenges_values = new Dictionary<string, int>();
 
     private GameObject m_ui_main;
     private List<GameObject> m_ui_main_children = new List<GameObject>();
@@ -16,6 +19,10 @@ public class script_manager_ui : MonoBehaviour {
     private GameObject m_ui_main_challenges;
     private List<GameObject> m_uit_main_challenges_children = new List<GameObject>();
 
+    //cached
+    private string[] c_string_array;
+    private int c_cost;
+
     void Awake()
     {
 
@@ -25,6 +32,17 @@ public class script_manager_ui : MonoBehaviour {
 
         m_manager_gameplay = GameObject.Find("Manager_Gameplay").GetComponent<script_manager_gameplay>();
         m_manager_ui_world = GameObject.Find("World Canvas").GetComponent<script_manager_ui_world>();
+        m_memory_bank = m_manager_gameplay.GetComponent<script_memory_bank>();
+
+        //challenges
+        c_string_array = new string[2];
+        c_string_array[0] = "challenge_classic";
+        c_string_array[0] = "challenge_sudden";
+        foreach (string s in c_string_array)
+        {
+            m_challenges.Add(s, GameObject.Find(s).gameObject);
+            m_challenges_values.Add(s + "_cost", 100);
+        }
     }
 
 	// Use this for initialization
@@ -75,6 +93,13 @@ public class script_manager_ui : MonoBehaviour {
                 foreach (GameObject child in m_uit_main_goalie_children)     {  child.SetActive(false);  }
                 foreach (GameObject child in m_uit_main_challenges_children) { child.SetActive(false);   }
                 break;
+            case "challenge_classic":
+                if ( Challenge_Fee(id) ) {
+                    goto case "cannon"; //fall-through
+                } else
+                {
+                    break;
+                }
             case "cannon":
                 m_manager_ui_world.Hide_main_ui();
                 m_manager_gameplay.Game_Event(id);
@@ -85,5 +110,20 @@ public class script_manager_ui : MonoBehaviour {
                 foreach (GameObject child in m_uit_main_challenges_children) { child.SetActive(true); }
                 break;
         }
+    }
+
+    private bool Challenge_Fee(string challenge_name)
+    {
+        c_cost = m_challenges_values[challenge_name + "_cost"];
+        if (c_cost <= m_memory_bank.Pucks)
+        {
+            m_memory_bank.Add_Pucks(-c_cost);
+            return true;
+        } else
+        {
+            //highlight the element
+            return false;
+        }
+        
     }
 }
