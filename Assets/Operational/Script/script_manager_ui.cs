@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class script_manager_ui : MonoBehaviour {
 
@@ -9,6 +10,7 @@ public class script_manager_ui : MonoBehaviour {
     private script_memory_bank m_memory_bank;
     private Dictionary<string, GameObject> m_challenges = new Dictionary<string, GameObject>();
     private Dictionary<string, int> m_challenges_values = new Dictionary<string, int>();
+    private Dictionary<string, GameObject> m_challenges_elements = new Dictionary<string, GameObject>();
 
     private GameObject m_ui_main;
     private List<GameObject> m_ui_main_children = new List<GameObject>();
@@ -22,6 +24,7 @@ public class script_manager_ui : MonoBehaviour {
     //cached
     private string[] c_string_array;
     private int c_cost;
+    private Vector3 c_v3;
 
     void Awake()
     {
@@ -37,12 +40,14 @@ public class script_manager_ui : MonoBehaviour {
         //challenges
         c_string_array = new string[2];
         c_string_array[0] = "challenge_classic";
-        c_string_array[0] = "challenge_sudden";
+        c_string_array[1] = "challenge_sudden";
         foreach (string s in c_string_array)
         {
             m_challenges.Add(s, GameObject.Find(s).gameObject);
             m_challenges_values.Add(s + "_cost", 100);
         }
+        m_challenges_elements.Add("not enough", GameObject.Find("not enough").gameObject);
+        m_challenges_elements["not enough"].SetActive(false);
     }
 
 	// Use this for initialization
@@ -93,6 +98,7 @@ public class script_manager_ui : MonoBehaviour {
                 foreach (GameObject child in m_uit_main_goalie_children)     {  child.SetActive(false);  }
                 foreach (GameObject child in m_uit_main_challenges_children) { child.SetActive(false);   }
                 break;
+            case "challenge_sudden":
             case "challenge_classic":
                 if ( Challenge_Fee(id) ) {
                     goto case "cannon"; //fall-through
@@ -121,9 +127,30 @@ public class script_manager_ui : MonoBehaviour {
             return true;
         } else
         {
-            //highlight the element
+            m_manager_ui_world.Play_UI_Sound(12);
             return false;
         }
         
+    }
+
+    public void Challenge_NotEnough(string s)
+    {
+        if (s == "hide")
+        {
+            m_challenges_elements["not enough"].SetActive(false);
+        } else
+        {
+            c_cost = m_challenges_values[s + "_cost"];
+            if (c_cost > m_memory_bank.Pucks)
+            {
+                c_v3 = m_challenges[s].transform.localPosition;
+                c_v3.x += 250;
+                c_v3.y -= 65;
+                m_challenges_elements["not enough"].transform.localPosition = c_v3;
+                m_challenges_elements["not enough"].SetActive(true);
+            }
+
+            
+        }
     }
 }
