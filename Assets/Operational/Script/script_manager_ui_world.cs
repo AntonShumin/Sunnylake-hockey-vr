@@ -34,6 +34,8 @@ public class script_manager_ui_world : MonoBehaviour {
     private VRTK.script_grabbable[] m_goalie_equipment_grabbable = new VRTK.script_grabbable[2];
     private bool m_goalie_equipment_grabbed = false;
 
+    private Dictionary<string, GameObject> m_summary_elements = new Dictionary<string, GameObject>();
+
     //cached 
     private Vector3 c_position;
     private float c_float;
@@ -70,7 +72,11 @@ public class script_manager_ui_world : MonoBehaviour {
         m_camera_rig = GameObject.Find("[CameraRig]").gameObject;
         m_camera_rig_ui_offset = m_ui_main.transform.position - m_camera_rig.transform.position;
 
-        
+        //summary
+        m_summary_elements.Add("try_button_pucks",m_summary.transform.FindChild("Retry/Button_Retry_Challenge/pucks").gameObject);
+        m_summary_elements.Add("try_button_text", m_summary.transform.FindChild("Retry/Button_Retry_Challenge/text").gameObject);
+
+
     }
 
 	// Use this for initialization
@@ -243,7 +249,7 @@ public class script_manager_ui_world : MonoBehaviour {
 
             }
         }
-        Show_Summary();
+        Show_Summary(type);
     }
 
     public void Show_main_ui()
@@ -277,7 +283,7 @@ public class script_manager_ui_world : MonoBehaviour {
         m_ui_main.SetActive(false);
     }
 
-    public void Show_Summary()
+    public void Show_Summary(string type)
     {
         //m_particles.Game_Event("onetimer");
         m_sound_source.PlayOneShot(m_sounds[2]);
@@ -286,6 +292,14 @@ public class script_manager_ui_world : MonoBehaviour {
 
         //equipment
         Equipment_Enable(false);
+
+        if(type == "cannon")
+        {
+            //move try_button_pucks
+            //move try_button_text
+        }
+
+
     }
 
     public void Hide_Summary()
