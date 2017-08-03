@@ -7,12 +7,11 @@ public class script_memory_bank : MonoBehaviour {
     private int m_pucks;
     private string m_username;
     private string m_password;
+    private int m_earned;
 
     //accessors 
-    public int Pucks
-    {
-        get { return m_pucks; }
-    }
+    public int Pucks     {        get { return m_pucks; }    }
+    public int Earned    {        get { return m_earned; }        set { m_earned = value; }    }
 
     void Awake()
     {

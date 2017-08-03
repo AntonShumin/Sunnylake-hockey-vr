@@ -40,7 +40,6 @@ public class script_manager_ui_world : MonoBehaviour {
     private Vector3 c_position;
     private float c_float;
 
-
     void Awake()
     {
         m_count_positive = transform.Find("Count_positive").gameObject;
@@ -75,6 +74,8 @@ public class script_manager_ui_world : MonoBehaviour {
         //summary
         m_summary_elements.Add("try_button_pucks",m_summary.transform.FindChild("Retry/Button_Retry_Challenge/pucks").gameObject);
         m_summary_elements.Add("try_button_text", m_summary.transform.FindChild("Retry/Button_Retry_Challenge/text").gameObject);
+        m_summary_elements.Add("try_earned", m_summary.transform.FindChild("Retry/Earned").gameObject);
+        m_summary_elements.Add("try_balance", m_summary.transform.FindChild("Retry/Balance").gameObject);
 
 
     }
@@ -295,10 +296,21 @@ public class script_manager_ui_world : MonoBehaviour {
 
         if(type == "cannon")
         {
-            //move try_button_pucks
-            //move try_button_text
-        }
 
+            m_summary_elements["try_button_pucks"].SetActive(false);
+            m_summary_elements["try_earned"].SetActive(true);
+            m_summary_elements["try_button_text"].transform.localPosition = new Vector3(14,6,0);
+            m_summary_elements["try_balance"].transform.localPosition = new Vector3(220, 0, 0);
+
+        } else if (type == "challenge_sudden" || type == "challenge_classic") {
+
+            m_summary_elements["try_button_pucks"].SetActive(true);
+            m_summary_elements["try_earned"].SetActive(false);
+            m_summary_elements["try_balance"].transform.localPosition = new Vector3(100,0,0);
+            m_summary_elements["try_button_text"].transform.localPosition = new Vector3(14, 44, 0);
+
+
+        }
 
     }
 

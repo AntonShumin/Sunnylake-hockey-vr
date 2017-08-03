@@ -15,6 +15,7 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
     private script_cannon[] m_cannons = new script_cannon[3];
     private script_particles m_manager_particles;
     private script_manager_audio m_manager_audio;
+    private script_memory_bank m_memory_bank;
 
     //puck management
     private float m_shoot_frequency; //1.4
@@ -65,6 +66,7 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
         m_cannons[2] = m_cannon_right;
         shoot_coroutine = Shoot_Puck();
         m_manager_audio = GetComponent<script_manager_audio>();
+        m_memory_bank = GetComponent<script_memory_bank>();
     }
 
     private void Setup_Summary_Vars()
@@ -398,13 +400,9 @@ public class script_manager_gameplay_cannon : MonoBehaviour {
         Debug.Log(score_array);
 
         m_ui_world.Show_Summary("cannon", score_array);
-        /*
-        foreach( string s in score_array)
-        {
-            Debug.Log(s);
-        }
-        */
-        
+
+        //memory bank
+        m_memory_bank.Earned = m_score_positive / 10;
 
         
     }
