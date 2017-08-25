@@ -14,9 +14,20 @@ public class script_movement : MonoBehaviour {
     private Vector3 m_position_current;
     private Vector3 m_possition_difference;
     private Vector3 m_position_difference_plane;
+    private Vector3 m_direction;
     private float m_position_difference_y;
     private float m_dt;
     private float m_transport_delta; //how far the controller moved over time
+    private float m_transport_delta_plane;
+    private float m_transport_delta_y;
+    private float m_total_distance;
+    private float m_total_distance_plane;
+    private float m_total_distance_y;
+    private float m_timer;
+
+    //cached
+    private float c_dotProduct;
+    
 
 
     void Update()
@@ -33,7 +44,7 @@ public class script_movement : MonoBehaviour {
     private void Skate()
     {
         /*
-         * Base velocity
+         * Base position and velocity
          * Subtract the movement of the player from the controller movemet
          */
         m_position_current = m_controller.transform.position - m_player.transform.position;
@@ -49,10 +60,45 @@ public class script_movement : MonoBehaviour {
          */
         m_dt = Time.deltaTime;
         m_transport_delta = m_position_difference_plane.magnitude / m_dt;
+        m_transport_delta_plane = m_position_difference_plane.magnitude / m_dt;
+        m_transport_delta_y = m_position_difference_y / m_dt;
 
-        Debug.Log(m_transport_delta);
 
-        if(m_transport_delta > 0.5f) { }
+        /*
+         * Swiper detections
+         */ 
+        if(m_transport_delta > 0.5f) {
+
+            m_total_distance += m_transport_delta;
+            m_total_distance_plane += m_transport_delta_plane;
+            m_total_distance_y += m_transport_delta_y;
+
+            //record swipe if its the first movement
+            // -------- fout, herschrijf met xz_begin en xz_eind
+            if (m_direction == null) m_direction = Vector3.Normalize(m_position_difference_plane);
+
+        }
+
+
+        /*
+         * Record time
+         */ 
+    
+        if(m_total_distance > 0)
+        {
+            m_timer += m_dt;
+            
+        }
+
+
+        /*
+         * Detect swiper break 
+         */
+
+        //direction change
+        c_dotProduct = Vector3.Dot(m_direction, Vector3.Normalize(m_position_difference_plane));
+
+         //time break
 
 
 
