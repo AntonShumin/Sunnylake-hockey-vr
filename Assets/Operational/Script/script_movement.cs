@@ -7,14 +7,20 @@ public class script_movement : MonoBehaviour {
     //public
     public bool b_skating;
 
-    //private
+    //GameObject
     private GameObject m_player;
     private GameObject m_controller;
+
+    //Vector3
     private Vector3 m_position_last;
     private Vector3 m_position_current;
     private Vector3 m_possition_difference;
     private Vector3 m_position_difference_plane;
-    private Vector3 m_direction;
+    private Vector3 m_swipe_start;
+    private Vector3 m_swipe_end;
+    
+
+    //Float
     private float m_position_difference_y;
     private float m_dt;
     private float m_transport_delta; //how far the controller moved over time
@@ -25,9 +31,14 @@ public class script_movement : MonoBehaviour {
     private float m_total_distance_y;
     private float m_timer;
 
+    //misc
+    private Rigidbody m_rigidbody;
+
+
     //cached
     private float c_dotProduct;
-    
+    private float c_force_strength;
+    private Vector3 c_direction;
 
 
     void Update()
@@ -39,14 +50,15 @@ public class script_movement : MonoBehaviour {
     {
         m_controller = gameObject;
         m_player = GameObject.Find("[CameraRig]");
+        m_rigidbody = m_player.GetComponent<Rigidbody>();
     }
 
     private void Skate()
     {
-        /*
+        /*******************************************************************
          * Base position and velocity
          * Subtract the movement of the player from the controller movemet
-         */
+         ******************************************************************/
         m_position_current = m_controller.transform.position - m_player.transform.position;
         if (m_position_last == null) m_position_last = m_position_current;
         m_possition_difference = m_position_difference_plane = m_position_current - m_position_last;
@@ -55,18 +67,18 @@ public class script_movement : MonoBehaviour {
         m_position_last = m_position_current;
 
 
-        /*
-         *Set vars 
-         */
+        /******************************************
+         *****************Set vars****************** 
+         *******************************************/
         m_dt = Time.deltaTime;
         m_transport_delta = m_position_difference_plane.magnitude / m_dt;
         m_transport_delta_plane = m_position_difference_plane.magnitude / m_dt;
         m_transport_delta_y = m_position_difference_y / m_dt;
 
 
-        /*
-         * Swiper detections
-         */ 
+        /***********************************************
+         * ***************Swiper detections*************
+         **********************************************/ 
         if(m_transport_delta > 0.5f) {
 
             m_total_distance += m_transport_delta;
@@ -74,15 +86,19 @@ public class script_movement : MonoBehaviour {
             m_total_distance_y += m_transport_delta_y;
 
             //record swipe if its the first movement
-            // -------- fout, herschrijf met xz_begin en xz_eind
-            if (m_direction == null) m_direction = Vector3.Normalize(m_position_difference_plane);
+           
+            if (m_direction == null)
+            {
+                m_swipe_start = m_position_last;
+            }
+            
 
         }
 
 
-        /*
-         * Record time
-         */ 
+        /**************************************************
+         * *****************Record time*********************
+         **************************************************/ 
     
         if(m_total_distance > 0)
         {
@@ -91,14 +107,26 @@ public class script_movement : MonoBehaviour {
         }
 
 
-        /*
-         * Detect swiper break 
-         */
+        /*****************************************************
+         ************** Detect swiper break******************* 
+         ****************************************************/
 
         //direction change
-        c_dotProduct = Vector3.Dot(m_direction, Vector3.Normalize(m_position_difference_plane));
+        c_dotProduct = Vector3.Dot(c_direction, Vector3.Normalize(m_position_difference_plane));
 
-         //time break
+        //time break
+
+        //get direction if 
+        c_direction = Vector3.Normalize(m_swipe_end - m_swipe_start);
+
+        //calculate swipe strength
+        c_force_strength =  Mathf.Abs( Vector3.Magnitude(m_swipe_end - m_swipe_start) );
+
+        //set velocity
+        m_rigidbody.velocity = c_direction * c_force_strength;
+        
+
+         
 
 
 
