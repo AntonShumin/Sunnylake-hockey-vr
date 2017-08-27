@@ -14,9 +14,9 @@ public class script_movement : MonoBehaviour {
     //Vector3
     private Vector3 m_position_last;
     private Vector3 m_position_current;
-    private Vector3 m_possition_difference;
+    private Vector3 m_position_difference;
     private Vector3 m_position_difference_plane;
-    private Vector3 m_swipe_start;
+    private Vector3 m_swipe_start = Vector3.zero;
     private Vector3 m_swipe_end;
     
 
@@ -30,6 +30,7 @@ public class script_movement : MonoBehaviour {
     private float m_total_distance_plane;
     private float m_total_distance_y;
     private float m_timer;
+    private float m_timer_idle;
 
     //misc
     private Rigidbody m_rigidbody;
@@ -39,6 +40,7 @@ public class script_movement : MonoBehaviour {
     private float c_dotProduct;
     private float c_force_strength;
     private Vector3 c_direction;
+    private float c_distance;
 
 
     void Update()
@@ -61,8 +63,8 @@ public class script_movement : MonoBehaviour {
          ******************************************************************/
         m_position_current = m_controller.transform.position - m_player.transform.position;
         if (m_position_last == null) m_position_last = m_position_current;
-        m_possition_difference = m_position_difference_plane = m_position_current - m_position_last;
-        m_position_difference_y = m_possition_difference.y;
+        m_position_difference = m_position_difference_plane = m_position_current - m_position_last;
+        m_position_difference_y = m_position_difference.y;
         m_position_difference_plane.y = 0f;
         m_position_last = m_position_current;
 
@@ -84,15 +86,23 @@ public class script_movement : MonoBehaviour {
             m_total_distance += m_transport_delta;
             m_total_distance_plane += m_transport_delta_plane;
             m_total_distance_y += m_transport_delta_y;
+            m_timer_idle = 0;
 
             //record swipe if its the first movement
            
-            if (m_direction == null)
+            if (m_swipe_start == Vector3.zero)
             {
                 m_swipe_start = m_position_last;
+                m_swipe_end = m_position_last;
             }
+
+            //calculate swipe end position
+            m_swipe_end += m_position_difference_plane;
             
 
+        } else if (m_total_distance > 0 )
+        {
+            m_timer_idle += m_dt;
         }
 
 
@@ -112,18 +122,53 @@ public class script_movement : MonoBehaviour {
          ****************************************************/
 
         //direction change
-        c_dotProduct = Vector3.Dot(c_direction, Vector3.Normalize(m_position_difference_plane));
-
-        //time break
-
-        //get direction if 
         c_direction = Vector3.Normalize(m_swipe_end - m_swipe_start);
+        c_dotProduct = Vector3.Dot(c_direction, Vector3.Normalize(m_position_difference));
+        c_distance = Vector3.Distance(m_swipe_end, m_swipe_start);
 
-        //calculate swipe strength
-        c_force_strength =  Mathf.Abs( Vector3.Magnitude(m_swipe_end - m_swipe_start) );
+        //time break or direction break
+        if ( m_swipe_start != Vector3.zero )
+        {
+            if (m_timer_idle >= 0.1f || c_dotProduct < 0)
+            {
 
-        //set velocity
-        m_rigidbody.velocity = c_direction * c_force_strength;
+                
+
+                if (c_distance > 0.5f)
+                {
+                    //set velocity
+                    if( Vector3.Dot(m_rigidbody.velocity, m_swipe_end - m_swipe_start) < 0 )
+                    {
+                        //add force if the same direction
+                        m_rigidbody.velocity += c_direction * c_distance * -1;
+                    } else
+                    {
+                        //full break on reverse direction
+                        m_rigidbody.velocity = c_direction * c_distance * -1;
+                    }
+                    
+                    //Debug.Log("end with " + c_direction * c_force_strength + " distance " + c_distance);
+
+                    
+                } else
+                {
+                    //Debug.Log("distance " + c_distance);
+                }
+
+                //reset
+                m_timer = 0;
+                m_timer_idle = 0;
+                m_swipe_start = Vector3.zero;
+                m_swipe_end = Vector3.zero;
+
+            }
+        }
+        
+        
+
+        
+
+        
         
 
          
