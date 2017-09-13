@@ -129,7 +129,7 @@
             }
 
         }
-
+        /*
         public void OnCollisionEnter(Collision collision)
         {
             
@@ -140,7 +140,7 @@
             {
                 Pulse(collision);
             }
-        }
+        }*/
 
         public void OnCollisionStay(Collision collision)
         {

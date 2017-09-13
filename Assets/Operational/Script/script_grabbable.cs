@@ -24,10 +24,12 @@
 
         void Start()
         {
+            /*
             m_particles_block = GameObject.Find("particles_block").GetComponent<ParticleSystem>();
             m_particles_block_special = GameObject.Find("particles_block_special").GetComponent<PlaygroundParticlesC>();
             m_manager_audio = GameObject.Find("Manager_Gameplay").GetComponent<script_manager_audio>();
             m_Audio_source = GetComponent<AudioSource>();
+            */
         }
 
         public override void Grabbed(GameObject grabbingObject)
@@ -56,7 +58,7 @@
             Vibrate(impact_velocity, 0.1f);
 
             //particles
-            Puck_Contact(collision, m_hot_object);
+            //Puck_Contact(collision, m_hot_object);
 
             //glove stop
             if ( m_hot_object == script_cannon_settings.hot.glove )
@@ -75,7 +77,7 @@
 
             
         }
-
+        /*
         public void Puck_Contact(Collision collision, script_cannon_settings.hot blocking_object)
         {
             c_puck = collision.gameObject.GetComponent<script_puck>();
@@ -125,7 +127,7 @@
                 }
                    
             }
-        }
+        }*/
 
 
 
