@@ -6,13 +6,10 @@ public class script_blade_movement : MonoBehaviour {
 
     //game objects, transforms and rigidbodies
     private Transform m_pad_reference_ground;
-    private Transform m_pad_reference_stick;
+    private Transform m_pad_reference_blade;
     private Transform m_stick;
     private Rigidbody m_Rigidbody;
     private Transform m_Ground;
-
-    //positions
-    public Vector3 m_stick_original_position;
 
     //VRTK move natives
     private Vector3 m_position_reference;
@@ -35,12 +32,15 @@ public class script_blade_movement : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
+
+        m_Ground = GameObject.Find("Ground").transform;
+        m_pad_reference_blade = transform.parent.FindChild("base").FindChild("blade_reference");
+        m_Rigidbody = GetComponent<Rigidbody>();
 		
 	}
 
     void FixedUpdate()
     {
-        //Debug.Log(m_stick.position);
         move_blade();
     }
 
@@ -48,10 +48,9 @@ public class script_blade_movement : MonoBehaviour {
     private void move_blade()
     {
 
-        //calculate new position
-
+        /*
         //if below ground
-        c_p1 = m_pad_reference_stick.position;
+        c_p1 = m_pad_reference_blade.position;
         c_p0 = m_pad_reference_ground.position;
         c_pg = m_Ground.position;
         if (c_p0.y < c_pg.y)
@@ -66,13 +65,17 @@ public class script_blade_movement : MonoBehaviour {
         else
         {
             c_pg = c_p0;
-
+            
         }
 
         //define new coordinates
         m_position_reference = c_pg + c_stick_offset;
-        m_rotation_reference = m_pad_reference_stick.rotation;
+        m_rotation_reference = m_pad_reference_blade.rotation;
 
+    */
+
+        m_position_reference = m_pad_reference_blade.position;
+        m_rotation_reference = m_pad_reference_blade.rotation;
 
 
         //VRTK - move the stick

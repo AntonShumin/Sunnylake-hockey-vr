@@ -1,47 +1,52 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using VRTK;
-
-public class script_grabbable_basic : VRTK_InteractableObject
+﻿namespace VRTK
 {
+    using System.Collections;
+    using System.Collections.Generic;
+    using UnityEngine;
 
-    private GameObject grabbingController;
-
-    // Use this for initialization
-    void Start () {
-		
-	}
-
-    public override void Grabbed(GameObject grabbingObject)
+    public class script_grabbable_basic : VRTK_InteractableObject
     {
-        base.Grabbed(grabbingObject);
-        grabbingController = grabbingObject;
-        Vibrate(0.2f, 0.1f);
-    }
 
-    public override void Ungrabbed(GameObject previousGrabbingObject)
-    {
-        base.Ungrabbed(previousGrabbingObject);
-        grabbingController = null;
-    }
+        private GameObject grabbingController;
 
-    public void Vibrate(float strength, float duration)
-    {
-        if (grabbingController != null && IsGrabbed())
+        // Use this for initialization
+        void Start()
         {
-            VRTK_SharedMethods.TriggerHapticPulse(VRTK_DeviceFinder.GetControllerIndex(grabbingController), strength, duration, 0.01f);
+
         }
 
-    }
-
-
-    public void Vibrate_pulse(float strength)
-    {
-        if (grabbingController != null && IsGrabbed())
+        public override void Grabbed(GameObject grabbingObject)
         {
-            VRTK_SharedMethods.TriggerHapticPulse(VRTK_DeviceFinder.GetControllerIndex(grabbingController), strength);
+            base.Grabbed(grabbingObject);
+            grabbingController = grabbingObject;
+            Vibrate(0.2f, 0.1f);
         }
+
+        public override void Ungrabbed(GameObject previousGrabbingObject)
+        {
+            base.Ungrabbed(previousGrabbingObject);
+            grabbingController = null;
+        }
+
+        public void Vibrate(float strength, float duration)
+        {
+            if (grabbingController != null && IsGrabbed())
+            {
+                VRTK_SharedMethods.TriggerHapticPulse(VRTK_DeviceFinder.GetControllerIndex(grabbingController), strength, duration, 0.01f);
+            }
+
+        }
+
+
+        public void Vibrate_pulse(float strength)
+        {
+            if (grabbingController != null && IsGrabbed())
+            {
+                VRTK_SharedMethods.TriggerHapticPulse(VRTK_DeviceFinder.GetControllerIndex(grabbingController), strength);
+            }
+        }
+
     }
 
 }
+
