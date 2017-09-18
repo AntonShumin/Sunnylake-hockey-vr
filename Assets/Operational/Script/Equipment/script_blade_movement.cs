@@ -4,13 +4,7 @@ using UnityEngine;
 
 public class script_blade_movement : MonoBehaviour {
 
-    //blade offset
-    public Vector3 m_position_offset;
-    public Vector3 m_rotation_offset;
-
     //game objects, transforms and rigidbodies
-    private Transform m_helper_ground_front;
-    private Transform m_helper_ground_back;
     private Transform m_stick_bladereference;
     private Transform m_stick;
     private Rigidbody m_Rigidbody;
@@ -42,8 +36,6 @@ public class script_blade_movement : MonoBehaviour {
         m_Ground = GameObject.Find("Ground").transform;
         m_stick = transform.parent.FindChild("base");
         m_stick_bladereference = m_stick.FindChild("blade_reference");
-        m_helper_ground_front = transform.FindChild("helper_ground_front");
-        m_helper_ground_back = transform.FindChild("helper_ground_back");
         m_Rigidbody = GetComponent<Rigidbody>();
 		
 	}
@@ -61,8 +53,7 @@ public class script_blade_movement : MonoBehaviour {
         c_p1 = m_stick.position;
         c_p0 = m_stick_bladereference.position;
         c_pg = m_Ground.position;
-        c_ground_helper = Mathf.Min(m_helper_ground_front.position.y, m_helper_ground_back.position.y);
-        if (c_ground_helper < c_pg.y)
+        if (c_p0.y < c_pg.y)
         {
             c_k = (c_pg.y - c_p1.y) / (c_p0.y - c_p1.y);
             c_pg.x = c_p1.x + c_k * (c_p0.x - c_p1.x);
@@ -74,7 +65,7 @@ public class script_blade_movement : MonoBehaviour {
         }
       
         m_position_reference = c_pg;
-        m_rotation_reference = m_stick_bladereference.rotation * Quaternion.Euler(m_rotation_offset);
+        m_rotation_reference = m_stick_bladereference.rotation;
 
 
         //VRTK - move the stick
